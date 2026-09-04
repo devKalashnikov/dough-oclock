@@ -1,0 +1,6 @@
+research/
+test/
+build.mjs
+engine.js
+.claude/
+node_modules/
