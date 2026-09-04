@@ -102,12 +102,13 @@ h1 .n{display:inline-grid;place-items:center;width:38px;height:38px;border-radiu
 @media (max-width:719px){.view-head{align-items:flex-start;gap:10px}.view-head .mascot{width:64px;height:64px;margin:-4px -4px 0 0}h1{font-size:25px}h1 .n{width:34px;height:34px;font-size:16px}.lede{font-size:15px}}
 
 /* ---------- plan questions ---------- */
-.q{display:grid;grid-template-columns:200px 1fr;gap:10px 24px;padding:20px 0;border-top:3px dotted rgba(59,35,20,.22)}
+.q{display:grid;grid-template-columns:200px minmax(0,1fr);gap:10px 24px;padding:20px 0;border-top:3px dotted rgba(59,35,20,.22)}
+.q-l,.q-r{min-width:0}
 .qs .q:first-child{border-top:0;padding-top:12px}
 .q-lbl{display:flex;align-items:center;gap:8px}
 .q-lbl label,.q-lbl span.l{font-weight:900;font-size:17px;line-height:1.3}
 .q-sub{font-size:13.5px;color:var(--ink-soft);font-weight:700;margin-top:3px}
-@media (max-width:719px){.q{grid-template-columns:1fr;gap:10px;padding:16px 0}}
+@media (max-width:719px){.q{grid-template-columns:minmax(0,1fr);gap:10px;padding:16px 0}}
 .info{width:24px;height:24px;border-radius:50%;border:2.5px solid var(--ink);background:var(--flour);color:var(--ink);font:900 13px/1 var(--fb);cursor:pointer;flex:none;display:inline-grid;place-items:center;padding:0;box-shadow:1.5px 2px 0 var(--ink);transition:transform .1s,box-shadow .1s,background .15s}
 .info:hover{background:var(--cheese)}
 .info:active,.info.on{transform:translate(1.5px,2px);box-shadow:0 0 0 var(--ink);background:var(--cheese)}
@@ -162,14 +163,12 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .f label{flex-wrap:wrap}
 @media (max-width:719px){.tune-grid{grid-template-columns:minmax(0,1fr)}}
 .f label{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;margin-bottom:7px}
-.tune-lede{grid-column:1/-1;margin:0 0 -4px;font-size:14px;font-weight:700;color:var(--ink-soft)}
 .auto{margin-left:auto;font:900 12px var(--fb);cursor:pointer;background:var(--flour);border:2.5px solid var(--ink);border-radius:999px;padding:4px 11px;box-shadow:1.5px 2px 0 var(--ink);color:var(--ink-soft);transition:transform .1s,box-shadow .1s,background .15s;flex:none;letter-spacing:.3px}
 .auto::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dough-2);border:2px solid var(--ink);margin-right:6px;vertical-align:1px}
 .auto.on{background:var(--basil);color:#fff;transform:translate(1.5px,2px);box-shadow:0 0 0 var(--ink)}
 .auto.on::before{background:var(--cheese)}
 .f.is-auto .inp{opacity:.55;background:var(--paper)}
-.f .auto-note{min-height:0;margin-top:6px}
-.f .auto-note:empty{display:none}
+
 .f .row{display:flex;gap:10px;align-items:center}
 .f .row span{color:var(--ink-soft);font-weight:800}
 .chev{margin-left:auto;font-family:var(--fd);font-size:20px;line-height:1;transition:transform .2s;flex:none;display:inline-block;color:var(--ink)}
@@ -204,7 +203,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .prog{margin-top:16px;display:flex;align-items:center;gap:12px;font-weight:900;font-size:12.5px;color:var(--ink-soft)}
 .prog .bar{flex:1;height:16px;border-radius:999px;background:var(--flour);border:2.5px solid var(--ink);overflow:hidden}
 .prog .bar i{display:block;height:100%;background:var(--tomato);transition:width .6s ease}
-.now-actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
 .wake{font:900 13px var(--fb);cursor:pointer;background:var(--flour);border:2.5px solid var(--ink);border-radius:999px;padding:7px 13px;box-shadow:2px 3px 0 var(--ink);display:inline-flex;align-items:center;gap:8px;color:var(--ink);transition:transform .1s,box-shadow .1s}
 .wake .d{width:10px;height:10px;border-radius:50%;background:var(--dough-2);border:2px solid var(--ink)}
 .wake.on{background:var(--basil);color:#fff} .wake.on .d{background:var(--cheese);animation:dot 1.6s infinite}
@@ -216,6 +214,15 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 @keyframes down{from{transform:translateY(-100%)}to{transform:none}}
 @media (max-width:719px){.now-mini{top:64px;padding:8px 14px}.now{padding:18px 17px 16px;border-radius:24px;box-shadow:4px 6px 0 var(--ink)}}
 .psum{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.facts{font-weight:800;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+.why-d{margin-top:4px}
+.why-d summary{list-style:none;display:flex;align-items:center;gap:8px;padding:8px 0 2px;font-weight:900;font-size:14.5px;color:var(--ink-soft);cursor:pointer}
+.why-d summary::-webkit-details-marker{display:none}
+.why-d summary .chev{margin-left:0;font-size:18px}
+.why-d[open] summary .chev{transform:rotate(180deg)}
+.why-d .why{margin:6px 0 4px;font-size:14.5px}
+.now-k .wake{margin-left:auto;font-size:11.5px;padding:4px 10px;letter-spacing:.2px}
+.acts{justify-content:flex-start;margin:22px 0 0}
 .plan-name{font-family:var(--fd);font-size:24px;line-height:1.15}
 .why{margin:0;font-weight:600}
 .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -232,7 +239,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .warn .ic{flex:none;font-size:18px;line-height:1.3}
 .warn .ic::before{content:"💡"} .warn.lvl-warn .ic::before{content:"⚠️"} .warn.lvl-danger .ic::before{content:"🚨"}
 .warn.lvl-danger .term{color:#fff;border-color:#fff}
-.acts{display:flex;gap:10px;justify-content:flex-end;margin:4px 0 4px;flex-wrap:wrap}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
 .mini{font:800 13.5px var(--fb);cursor:pointer;background:var(--flour);border:2.5px solid var(--ink);border-radius:999px;padding:7px 13px;box-shadow:2px 3px 0 var(--ink);color:var(--ink);display:inline-flex;gap:6px;align-items:center;transition:transform .1s,box-shadow .1s,background .15s}
 .mini:hover{background:var(--cheese)}
 .mini:active{transform:translate(2px,3px);box-shadow:0 0 0 var(--ink)}
@@ -339,9 +346,74 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .chat-form .btn{font-size:18px;padding:10px 20px}
 .sheet .hint{padding:16px 18px;font-weight:700;color:var(--ink-soft);font-size:14px}
 
+/* ---------- breathing room on phones ---------- */
+@media (max-width:719px){
+  main{padding:20px 14px 185px}
+  .card{padding:24px 18px 26px}
+  .card+.card{margin-top:24px}
+  .view-head{margin-bottom:12px}
+  .lede{font-size:14.5px}
+  h1{margin-bottom:6px}
+  .q{padding:26px 0;gap:14px}
+  .q-sub{display:none}
+  .q-lbl label,.q-lbl span.l{font-size:16.5px}
+  .qs .q:first-child{padding-top:14px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:12px -18px 0;padding:3px 18px 8px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+  .scale{display:none}
+  .range{margin:14px 0 4px}
+  .note{margin-top:10px}
+  .wx{margin-top:16px;padding:12px 14px}
+  .count-row+.count-row{margin-top:14px}
+  .tune{margin-top:20px}
+  .tune summary{padding:20px 0 8px}
+  .tune-grid{gap:24px;padding:14px 0 10px}
+  .f label{margin-bottom:9px}
+  .now{padding:22px 18px 20px;margin-bottom:24px}
+  .now-t{font-size:25px;margin:8px 0 8px}
+  .now-w{font-size:16px}
+  .now-d{font-size:14px;margin-top:12px}
+  .prog{margin-top:20px}
+  .plan-name{font-size:22px;margin-top:6px}
+  .notes{margin-top:18px}
+  .notes summary{padding:14px 16px}
+  .tl{margin-top:10px}
+  .tl-day{padding:24px 0 14px}
+  .step{padding:10px 0;grid-template-columns:48px 1fr;gap:0 12px}
+  .step::before{left:23px;top:58px;bottom:-14px}
+  .step .node{width:46px;height:46px;font-size:22px;margin-top:3px}
+  .step.wait .node{width:34px;height:34px;margin:9px 0 0 6px;font-size:16px;box-shadow:1.5px 2px 0 var(--ink)}
+  .step .box{padding:12px 14px 13px;border-width:2.5px}
+  .step .head{gap:8px 10px}
+  .step .t{font-size:16px}
+  .step .title{font-size:15px;line-height:1.35}
+  .step .dur{font-size:11.5px}
+  .step .detail{margin-top:10px}
+  .tl-sec{margin-top:28px;padding-top:20px}
+  .acts .print{display:none}
+  .rgrid{gap:22px;margin-top:16px}
+  .rcard{padding:20px 16px 18px}
+  .ing{padding:9px 0}
+  .acc details{margin-top:14px}
+  .acc summary{padding:14px 16px}
+  .view-head{display:block;position:relative}
+  .view-head .mascot{position:absolute;right:-6px;top:-10px;width:58px;height:58px;margin:0}
+  .view-head h1{min-height:44px;padding-right:64px}
+  .step .head{flex-wrap:wrap}
+  .step .title{flex:1 1 0}
+  .step .chev{order:2;margin-left:auto;align-self:center}
+  .step .head::after{content:"";order:3;flex-basis:100%;height:0}
+  .step .dur{order:4;margin-top:2px}
+  .cta-in{padding:6px 6px 6px 16px;gap:10px}
+  .cta-txt b{display:none}
+  .cta-txt span{font-size:13.5px;font-weight:900;color:var(--paper)}
+}
+
 /* ---------- print ---------- */
 @media print{
-  body::before,body::after,.top,.tabs,.cta,.acts,.scrim,.pop,.sheet,.coach-btn,.now-mini,.now-actions{display:none!important}
+  body::before,body::after,.top,.tabs,.cta,.acts,.scrim,.pop,.sheet,.coach-btn,.now-mini,.wake{display:none!important}
+  .why-d,.notes,.how,.tune{display:block} .why-d summary .chev,.notes summary .chev{display:none}
   body{background:#fff}
   main{max-width:none;padding:0}
   #view-plan,#view-learn{display:none!important}
@@ -391,7 +463,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
   <div class="view-head">
     <div>
       <h1><span class="n">1</span>The plan</h1>
-      <p class="lede">Tell it <b>when you're eating</b>. The clock times, the yeast and the water temperature follow. Tap any <b>i</b> for the why.</p>
+      <p class="lede">Tell it <b>when you're eating</b>. Everything else follows. Tap an <b>i</b> for the why.</p>
     </div>
     <div class="mascot" aria-hidden="true"><svg viewBox="0 0 140 140" aria-hidden="true">
       <ellipse class="shadow" cx="70" cy="122" rx="46" ry="9" fill="#3B2314" opacity=".35"/>
@@ -515,17 +587,16 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
   <details class="tune" id="tune">
     <summary><span>Fine-tune</span><span class="tune-sum" id="tuneSum"></span><span class="chev">▾</span></summary>
     <div class="tune-grid">
-      <p class="tune-lede">Leave anything on <b>Auto</b> and the app assumes a sensible value. Switch it off only for what you actually know.</p>
-      <div class="f" data-auto="fridge"><label for="fridge">Fridge temperature <button class="info" data-info="fridge" aria-label="About the fridge">i</button><button type="button" class="auto" data-auto-for="fridge">Auto</button></label><input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5"><div class="note auto-note"></div></div>
-      <div class="f" data-auto="ball"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button><button type="button" class="auto" data-auto-for="ball">Auto</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"><div class="note auto-note"></div></div>
+      <div class="f" data-auto="fridge"><label for="fridge">Fridge temperature <button class="info" data-info="fridge" aria-label="About the fridge">i</button><button type="button" class="auto" data-auto-for="fridge">Auto</button></label><input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5"></div>
+      <div class="f" data-auto="ball"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button><button type="button" class="auto" data-auto-for="ball">Auto</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"></div>
       <div class="f" data-auto="salt"><label for="salt">Salt <button class="info" data-info="salt" aria-label="About salt">i</button><button type="button" class="auto" data-auto-for="salt">Auto</button></label>
-        <select class="inp" id="salt"><option value="0.035" selected>3.5% — validated, firmer</option><option value="0.030">3.0% — classic Neapolitan</option></select><div class="note auto-note"></div></div>
+        <select class="inp" id="salt"><option value="0.035" selected>3.5% — validated, firmer</option><option value="0.030">3.0% — classic Neapolitan</option></select></div>
       <div class="f"><label for="yeastType">Yeast <button class="info" data-info="yeastType" aria-label="About yeast types">i</button></label>
         <select class="inp" id="yeastType"><option value="idy" selected>Instant dry (Saf-Instant)</option><option value="ady">Active dry (bloomed)</option><option value="fresh">Fresh (khameer)</option></select></div>
-      <div class="f" data-auto="now"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button><button type="button" class="auto" data-auto-for="now">Auto</button></label><input class="inp" type="datetime-local" id="nowAt"><div class="note auto-note"></div></div>
+      <div class="f" data-auto="now"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button><button type="button" class="auto" data-auto-for="now">Auto</button></label><input class="inp" type="datetime-local" id="nowAt"></div>
       <div class="f" data-auto="sleep"><label>Asleep between <button class="info" data-info="sleep" aria-label="About sleep hours">i</button><button type="button" class="auto" data-auto-for="sleep">Don't care</button></label>
-        <div class="row"><input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from"><span>and</span><input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at"></div><div class="note auto-note"></div></div>
-      <div class="f" data-auto="night"><label for="nightTemp">Night temperature (°C) <button class="info" data-info="night" aria-label="About night temperature">i</button><button type="button" class="auto" data-auto-for="night">Auto</button></label><input class="inp" type="number" id="nightTemp" placeholder="auto" min="5" max="40" step="1"><div class="note auto-note"></div></div>
+        <div class="row"><input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from"><span>and</span><input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at"></div></div>
+      <div class="f" data-auto="night"><label for="nightTemp">Night temperature (°C) <button class="info" data-info="night" aria-label="About night temperature">i</button><button type="button" class="auto" data-auto-for="night">Auto</button></label><input class="inp" type="number" id="nightTemp" placeholder="auto" min="5" max="40" step="1"></div>
     </div>
   </details>
  </div>
@@ -1117,14 +1188,14 @@ const ENGINE = (() => {
     rest: { t: 'The second sitting', b: `<p>Decides what happens to the spare balls. A gap of an hour or two: they proof with the others. Up to about 30 hours: they wait in the fridge un-proofed and come out a few hours before. Longer: they are frozen right after balling, thawed overnight in the fridge, and finished at room temperature.</p>` },
     hydration: { t: 'Hydration', b: `<p>Water as a percentage of the flour by weight: 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven, so a lighter, airier crust, but the dough is stickier and tears more easily. Maida is a weak flour and cannot hold what Italian 00 holds: 62–65% is the sweet spot here, 70% is expert territory. In a hot kitchen stay at 65% or below.</p>` },
     temp: { t: 'Kitchen temperature', b: `<p>The temperature where the dough will sit, not the outdoor reading. Yeast roughly doubles its pace every 8–10°C, so this number moves every wait in the plan.</p><p>Use the forecast to prefill it and the timeline follows the hourly curve, nights included. Above 31°C the ready window shrinks to about 30 minutes, so an AC room is worth entering instead.</p>` },
-    fridge: { t: 'Fridge temperature', b: `<p>Most home fridges sit at 3–7°C on the dough shelf. A fridge at 8°C ferments dough about twice as fast as one at 4°C, so a cheap fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C every cold hold is shortened.</p>` },
-    ball: { t: 'Ball weight', b: `<p>280 g stretches to 31–32 cm with a 2–3 mm centre. 250 g gives about 29 cm. Thick 8–9 inch pizzas are usually under-stretched balls, not too little dough.</p>` },
-    salt: { t: 'Salt: how much, and when', b: `<p><b>How much:</b> 3.5% of the flour is the validated dough: saltier, and it tightens weak maida gluten so the dough is firmer and less sticky. 3% is the classic Neapolitan level. Never go below 3% with maida: salt also brakes the enzymes that turn weak flour slack. The app already slows its yeast maths for the salt you choose.</p><p><b>When:</b> not at the start. Mix flours, poolish and 80% of the water for 3–4 minutes, rest 10–20 minutes so the slow-hydrating maida drinks, then add the salt and mix one minute, then the remaining water in a slow stream. Early salt holds back that first gluten formation; late salt tightens a dough that has already hydrated.</p><p>If you ever go the Neapolitan way instead (salt dissolved in the water first), keep yeast and salt from sitting together for more than 5 minutes.</p>` },
+    fridge: { t: 'Fridge temperature', b: `<p><b>Auto assumes 5°C.</b> Most home fridges sit at 3–7°C on the dough shelf. A fridge at 8°C ferments dough about twice as fast as one at 4°C, so a cheap fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C every cold hold is shortened.</p>` },
+    ball: { t: 'Ball weight', b: `<p><b>Auto assumes 280 g.</b> 280 g stretches to 31–32 cm with a 2–3 mm centre. 250 g gives about 29 cm. Thick 8–9 inch pizzas are usually under-stretched balls, not too little dough.</p>` },
+    salt: { t: 'Salt: how much, and when', b: `<p><b>Auto uses 3.5%</b>, or 3% when the dough must be ready within 6 hours.</p><p><b>How much:</b> 3.5% of the flour is the validated dough: saltier, and it tightens weak maida gluten so the dough is firmer and less sticky. 3% is the classic Neapolitan level. Never go below 3% with maida: salt also brakes the enzymes that turn weak flour slack. The app already slows its yeast maths for the salt you choose.</p><p><b>When:</b> not at the start. Mix flours, poolish and 80% of the water for 3–4 minutes, rest 10–20 minutes so the slow-hydrating maida drinks, then add the salt and mix one minute, then the remaining water in a slow stream. Early salt holds back that first gluten formation; late salt tightens a dough that has already hydrated.</p><p>If you ever go the Neapolitan way instead (salt dissolved in the water first), keep yeast and salt from sitting together for more than 5 minutes.</p>` },
     cold: { t: 'Cold balls or room balls?', b: `<p>The poolish always gets the fridge overnight: that is where most of the flavour comes from. The balls only go into the fridge too when it is worth it, and the app decides that for you.</p><p><b>Cold balls</b> need at least 8 hours cold and then 2.5–4 hours to warm back up (cold dough tears and blisters at 500°C), all after the poolish has had its own 12 hours. So they win when there is more time than the poolish can absorb (roughly 30 hours or more), when the kitchen is 31°C or hotter (a room proof would be ready for only 30 minutes), or when the room plan would land a step in your sleep.</p><p><b>Room balls</b> win under about 30 hours: with 16 hours, for example, a cold ball stage would be too short to add flavour and would only add the warm-up risk.</p>` },
     yeastType: { t: 'Yeast', b: `<p>Amounts are converted automatically: fresh yeast is about three times the weight of instant, active dry a little more than instant and it must be bloomed in the water first. Weigh yeast on a 0.1 g scale. A level quarter teaspoon of instant is roughly 0.9 g.</p>` },
-    now: { t: 'Pretend "now"', b: `<p>Plan ahead by pretending it is a different time. Leave it blank and the app uses the real clock, refreshing the "right now" card every 30 seconds.</p>` },
+    now: { t: 'Pretend "now"', b: `<p><b>Auto is the real clock</b>, and the "right now" card refreshes every 30 seconds. Switch Auto off to plan ahead by pretending it is a different time.</p>` },
     sleep: { t: 'Sleep hours', b: `<p>No hands-on step is scheduled while you sleep. The fridge absorbs the difference. If a schedule cannot avoid it, the plan says how much later to bake instead.</p><p>"Don't care" removes the window: the plan is then free to put a step at any hour, which can shorten the schedule.</p>` },
-    night: { t: 'Night temperature', b: `<p>Optional. If the kitchen cools at night, waits that fall between 22:00 and 07:00 are timed at this temperature. The forecast fills this in for you.</p>` },
+    night: { t: 'Night temperature', b: `<p>Waits between 22:00 and 07:00 are timed at this temperature. <b>Auto</b> takes it from the forecast when you apply one; otherwise it assumes about 4° cooler than the day once the kitchen is above 24°C.</p>` },
     poolish: { t: 'Poolish', b: `<p>A small starter: equal weights of water and flour with a pinch of yeast, fermented on its own before the real dough is mixed. About a quarter of the flour gets this head start.</p><p>It builds flavour and softens the gluten so the dough stretches easily. With weak flour it is the fastest route to a pizzeria-level crust.</p>` },
     poke: { t: 'The poke test', b: `<p>Press a floured finger gently into a ball. Springs back slowly and only halfway: ready. Springs back fast: wait. The dent stays: over-proofed, still usable if you handle it gently, or re-ball it and give it 45 minutes.</p><p>It always beats the clock.</p>` },
     ddt: { t: 'Dough temperature', b: `<p>The temperature of the dough right after mixing. It sets the pace of everything that follows, and water is the only ingredient whose temperature you can easily choose, so the app back-calculates the water from the flour, room and poolish temperatures plus the friction the mixer adds.</p>` },
@@ -1246,15 +1317,13 @@ const ENGINE = (() => {
   const leadNow = () => { const b = fromLocalInput($('#bakeAt').value), n = fromLocalInput($('#nowAt').value) || new Date(); return b ? (b - n) / 3600e3 : null; };
   const autoSalt = () => { const L = leadNow(); return L != null && L < 6 ? '0.030' : '0.035'; };
   function applyAuto() {
-    const set = (k, on) => { const f = document.querySelector(`.f[data-auto="${k}"]`); if (!f) return; f.classList.toggle('is-auto', on); f.querySelector('.auto').classList.toggle('on', on); f.querySelectorAll('.inp').forEach(i => { i.disabled = on; }); return f.querySelector('.auto-note'); };
-    let n;
-    n = set('fridge', AUTO.fridge); if (AUTO.fridge) $('#fridge').value = 5; n.textContent = AUTO.fridge ? 'Assuming 5°C, a typical home fridge. Measure yours for tighter cold holds.' : '';
-    n = set('ball', AUTO.ball); if (AUTO.ball) $('#ball').value = 280; n.textContent = AUTO.ball ? 'Assuming 280 g, which stretches to about 31 cm.' : '';
-    n = set('salt', AUTO.salt); if (AUTO.salt) $('#salt').value = autoSalt(); n.textContent = AUTO.salt ? ($('#salt').value === '0.030' ? 'Using 3%: this dough must be ready within 6 hours, and salt slows the yeast.' : 'Using 3.5%, the validated level for maida. Drops to 3% for a rushed same-day dough.') : '';
-    n = set('now', AUTO.now); if (AUTO.now) $('#nowAt').value = ''; n.textContent = AUTO.now ? 'Real clock.' : '';
-    n = set('sleep', AUTO.sleep); n.textContent = AUTO.sleep ? 'No sleep window: a hands-on step may land at any hour.' : 'No hands-on step is scheduled between these times.';
-    n = set('night', AUTO.night); if (AUTO.night) $('#nightTemp').value = (state.hourly && wx) ? wx.night : '';
-    n.textContent = AUTO.night ? ((state.hourly && wx) ? `From the forecast: about ${wx.night}°C at night.` : 'Assuming about 4° cooler than the day once the kitchen is above 24°C. Apply the forecast for the real curve.') : '';
+    const set = (k, on) => { const f = document.querySelector(`.f[data-auto="${k}"]`); if (!f) return; f.classList.toggle('is-auto', on); f.querySelector('.auto').classList.toggle('on', on); f.querySelectorAll('.inp').forEach(i => { i.disabled = on; }); };
+    set('fridge', AUTO.fridge); if (AUTO.fridge) $('#fridge').value = 5;
+    set('ball', AUTO.ball); if (AUTO.ball) $('#ball').value = 280;
+    set('salt', AUTO.salt); if (AUTO.salt) $('#salt').value = autoSalt();
+    set('now', AUTO.now); if (AUTO.now) $('#nowAt').value = '';
+    set('sleep', AUTO.sleep);
+    set('night', AUTO.night); if (AUTO.night) $('#nightTemp').value = (state.hourly && wx) ? wx.night : '';
   }
   $$('.auto').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.autoFor; AUTO[k] = !AUTO[k]; applyAuto(); tuneSummary(); save(); compute();
@@ -1359,11 +1428,11 @@ const ENGINE = (() => {
     const t0 = r.steps[0].t.getTime(), t1 = r.inputs.bake.getTime();
     const pct = t1 > t0 ? Math.max(0, Math.min(100, (now - t0) / (t1 - t0) * 100)) : 0;
     let body;
-    if (current) body = `<div class="now-k"><span class="dot"></span>Right now</div><div class="now-t">${esc(current.title)}</div><div class="now-w">until <b>${fmtTime(new Date(endOf(current)))}</b> · <span class="cd" data-cd="${endOf(current)}"></span></div>${current.detail?`<p class="now-d">${escT(current.detail)}</p>`:''}`;
-    else if (next) body = `<div class="now-k">Next up</div><div class="now-t">${esc(next.title)}</div><div class="now-w"><b>${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}</b> · <span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-d">${escT(next.detail)}</p>`:''}`;
-    else body = `<div class="now-k">Done</div><div class="now-t">Enjoy the pizza.</div>`;
-    const wakeBtn = ('wakeLock' in navigator) ? `<div class="now-actions"><button class="wake${wantWake ? ' on' : ''}" id="wakeBtn" type="button"><span class="d"></span>${wantWake ? 'Screen stays on' : 'Keep screen on'}</button></div>` : '';
-    return body + `<div class="prog"><span>${done} of ${hands.length} steps</span><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div><span>pizza ${fmtTime(r.inputs.bake)}</span></div>` + wakeBtn;
+    const wakeBtn = ('wakeLock' in navigator) ? `<button class="wake${wantWake ? ' on' : ''}" id="wakeBtn" type="button"><span class="d"></span>${wantWake ? 'Screen on' : 'Keep screen on'}</button>` : '';
+    if (current) body = `<div class="now-k"><span class="dot"></span>Right now${wakeBtn}</div><div class="now-t">${esc(current.title)}</div><div class="now-w">until <b>${fmtTime(new Date(endOf(current)))}</b> · <span class="cd" data-cd="${endOf(current)}"></span></div>${current.detail?`<p class="now-d">${escT(current.detail)}</p>`:''}`;
+    else if (next) body = `<div class="now-k">Next up${wakeBtn}</div><div class="now-t">${esc(next.title)}</div><div class="now-w"><b>${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}</b> · <span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-d">${escT(next.detail)}</p>`:''}`;
+    else body = `<div class="now-k">Done${wakeBtn}</div><div class="now-t">Enjoy the pizza.</div>`;
+    return body + `<div class="prog"><span>${done} of ${hands.length} steps</span><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div><span>pizza ${fmtTime(r.inputs.bake)}</span></div>`;
   }
   function nowMiniHTML(all, now) {
     const { next, current } = nowState(all, now);
@@ -1415,24 +1484,17 @@ const ENGINE = (() => {
         <h1><span class="n">2</span>Your plan</h1>
         <div class="psum">
         <div class="plan-name">${esc(r.planName || r.plan)}</div>
-        <p class="why">${terms(escT(r.why))}</p>
-        <div class="stats">
-          <span class="stat">${ENGINE.fmtH(r.lead)} lead</span>
-          <span class="stat${r.T >= 31 ? ' hot' : ''}">${r.T}°C room${r.forecast ? ' · forecast' : ''}</span>
-          <span class="stat">${inp.hydration}% hydration</span>
-          <span class="stat">${inp.pizzas} × ${inp.ball} g</span>
-          <span class="stat cold">${r.Tf}°C fridge</span>
-        </div>
+        <div class="facts">${ENGINE.fmtH(r.lead)} lead · ${r.T}°C room${r.forecast ? ' (forecast)' : ''} · ${r.Tf}°C fridge · ${inp.hydration}% · ${inp.pizzas} × ${inp.ball} g</div>
+        <details class="why-d"><summary>Why this plan<span class="chev">▾</span></summary><p class="why">${terms(escT(r.why))}</p></details>
         ${warnsHTML(r.warnings)}
         </div>
       </div>
       <div class="card">
         <h1><span class="n">3</span>The timeline</h1>
-        <p class="lede">Every time is on your clock. Tap a step for what to do and what it should look like.</p>
-      <div class="acts"><button class="mini" id="copy">📋 Copy as text</button><button class="mini" id="print">🖨️ Print</button></div>
+        <p class="lede">Tap a step for what to do and what it should look like.</p>
       <ol class="tl${animate ? ' reveal' : ''}">${tlHTML(r.steps, now)}</ol>
-      ${lo ? `<div class="tl-sec"><b>The ${lo.count} spare ball${lo.count>1?'s':''}</b><p>${terms(escT(lo.note))}</p></div>${lo.steps?.length ? `<ol class="tl">${tlHTML(lo.steps, now)}</ol>` : ''}` : ''}
-      <p class="foot">Watch the dough, not the clock: the <button class="term" data-info="poke">poke test</button> always wins.</p>
+      ${lo ? `<div class="tl-sec"><b>The ${lo.count} spare ball${lo.count>1?'s':''}</b><details class="why-d"><summary>What happens to ${lo.count>1?'them':'it'}<span class="chev">▾</span></summary><p class="why">${terms(escT(lo.note))}</p></details></div>${lo.steps?.length ? `<ol class="tl">${tlHTML(lo.steps, now)}</ol>` : ''}` : ''}
+      <div class="acts"><button class="mini" id="copy">📋 Copy as text</button><button class="mini print" id="print">🖨️ Print</button></div>
       </div>`;
     markSteps(all, now);
     if (nowObs) { nowObs.disconnect(); nowObs.observe($('#nowCard')); }
@@ -1556,7 +1618,7 @@ const ENGINE = (() => {
         night: Math.round((night.length ? Math.min(...night) : Math.min(...next.map(h => h.out))) + WX.nightOffset),
         hourly: hours.map(h => { const hr = new Date(h.t).getHours(); const night = hr >= 22 || hr < 7; return { t: h.t, T: Math.round((h.out + (night ? WX.nightOffset : WX.dayOffset)) * 10) / 10 }; }),
       };
-      $('#wxText').innerHTML = `<b>${WX.name}</b> ${wx.now}° outside now · ${wx.lo}–${wx.hi}° over the next 24 h<small>Kitchen estimate ${wx.room}° by day, ${wx.night}° at night. The timeline then follows the hourly forecast.</small>`;
+      $('#wxText').innerHTML = `<b>${WX.name}</b> ${wx.now}° outside<small>Kitchen ≈ ${wx.room}° by day, ${wx.night}° at night</small>`;
       $('#wx').hidden = false;
       if (!localStorage.getItem(KEY)) applyWeather();
     } catch (e) { /* offline or blocked: the slider still works */ }
