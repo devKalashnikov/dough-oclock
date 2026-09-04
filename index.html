@@ -2,491 +2,521 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dough O'Clock</title>
 <meta name="description" content="Tell it when you're eating pizza. It tells you when to mix, ball, chill and bake — a deterministic Neapolitan dough scheduler for maida + a 500°C gas oven.">
+<meta name="theme-color" content="#F6F0E4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:ital,wght@0,500;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   DOUGH O'CLOCK — raw-dough claymorphic UI
-   ============================================================ */
 :root{
-  --dough:#F1DDB2;
-  --dough-2:#E8CC94;
-  --paper:#FFF8E9;
-  --flour:#FFFDF6;
-  --crust:#D9A25F;
-  --crust-dark:#A8672A;
-  --ink:#3B2314;
-  --ink-soft:#6B4A34;
-  --tomato:#E4452B;
-  --tomato-dark:#B22E19;
-  --basil:#4F9C3E;
-  --basil-dark:#2E6A22;
-  --cheese:#FFD35C;
-  --cheese-dark:#E0A81C;
-  --ice:#BFE3F5;
-  --ice-dark:#3D8BB5;
-  --radius:34px;
-  --shadow:6px 8px 0 var(--ink);
-  --shadow-sm:4px 5px 0 var(--ink);
-  --font-display:'Lilita One', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif;
-  --font-body:'Nunito', 'Segoe UI', 'Helvetica Neue', sans-serif;
-  color-scheme: light;
+  --paper:#F6F0E4; --paper-2:#EDE4D3; --card:#FFFDF8; --line:#E6DCC9; --line-2:#D2C4AB;
+  --ink:#231A13; --ink-2:#5C4E41; --ink-3:#8E7E6C;
+  --tomato:#C7412A; --tomato-2:#A5321F; --tomato-soft:#F9E3DC;
+  --basil:#4A7A3A; --basil-soft:#E3EEDC;
+  --cold:#3B6CA6; --cold-soft:#DFE9F6;
+  --ember:#D2712A; --ember-soft:#FBE6D2;
+  --gold:#E4B45C;
+  --r:16px; --r-s:11px;
+  --fd:'Fraunces',Georgia,'Times New Roman',serif;
+  --fb:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
-*{box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:light;-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(900px 420px at 50% -220px,#FFF8EA,transparent 70%),var(--paper);color:var(--ink);font:16px/1.5 var(--fb);font-feature-settings:"tnum" 1}
 [hidden]{display:none!important}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:var(--font-body);
-  font-size:16px;
-  line-height:1.5;
-  color:var(--ink);
-  background:var(--dough);
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-/* flour-dust + soft dough blobs backdrop */
-body::before{
-  content:"";
-  position:fixed; inset:0; z-index:-2;
-  background:
-    radial-gradient(60vw 60vw at 12% -10%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(50vw 50vw at 100% 20%, rgba(255,211,92,.35), transparent 60%),
-    radial-gradient(45vw 45vw at 20% 100%, rgba(228,69,43,.13), transparent 60%),
-    radial-gradient(40vw 40vw at 90% 95%, rgba(79,156,62,.16), transparent 60%),
-    var(--dough);
-}
-body::after{
-  content:"";
-  position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.55; mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.12  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-::selection{background:var(--cheese);color:var(--ink)}
+button{font-family:inherit}
+svg{display:block}
+a{color:inherit}
 
-.wrap{max-width:980px;margin:0 auto;padding:28px 18px 90px}
+/* ---------- header / navigation ---------- */
+.top{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;height:62px;padding:0 20px;background:rgba(246,240,228,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font:600 20px/1 var(--fd);font-variation-settings:"SOFT" 80,"opsz" 20;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.brand svg{width:28px;height:28px}
+.tabs{display:flex;gap:2px;padding:4px;background:var(--paper-2);border-radius:999px}
+.tab{appearance:none;border:0;background:none;padding:8px 14px;border-radius:999px;font:600 14px var(--fb);color:var(--ink-2);display:flex;gap:7px;align-items:center;cursor:pointer;transition:background .15s,color .15s}
+.tab svg{width:16px;height:16px}
+.tab:hover{color:var(--ink)}
+.tab.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(40,25,10,.14)}
+.coach-btn{justify-self:end;appearance:none;border:1.5px solid var(--line-2);background:var(--card);color:var(--ink);font:600 14px var(--fb);padding:8px 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:border-color .15s}
+.coach-btn svg{width:16px;height:16px;color:var(--tomato)}
+.coach-btn:hover{border-color:var(--ink-3)}
+@media (max-width:719px){
+  .top{grid-template-columns:1fr auto;height:56px;padding:0 16px;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--paper)}
+  .brand{font-size:18px}
+  .tabs{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;margin:0;padding:6px;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 32px rgba(40,25,10,.18);justify-content:space-around}
+  .tab{flex:1;flex-direction:column;gap:3px;font-size:11px;padding:6px 4px 5px;justify-content:center}
+  .tab svg{width:20px;height:20px}
+  .tab.on{background:var(--tomato-soft);color:var(--tomato-2);box-shadow:none}
+  .coach-btn span{display:none}
+  .coach-btn{padding:8px 10px}
+}
 
-/* ---------- header ---------- */
-header{
-  display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;
-  margin:8px 0 34px;
-}
-.mascot{width:132px;height:132px;position:relative;flex:none}
-.mascot svg{width:100%;height:100%;overflow:visible}
-.mascot .blob{animation:breathe 4.2s ease-in-out infinite;transform-origin:50% 60%}
-.mascot .shadow{animation:shadow 4.2s ease-in-out infinite;transform-origin:50% 50%}
-@keyframes breathe{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.06,1.03) translateY(-3px)}}
-@keyframes shadow{0%,100%{transform:scaleX(1);opacity:.35}50%{transform:scaleX(1.08);opacity:.25}}
-.mascot .eye{animation:blink 5.5s infinite}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
-h1{
-  font-family:var(--font-display);font-weight:400;
-  font-size:clamp(44px,8vw,78px);line-height:.95;margin:0;
-  color:var(--tomato);letter-spacing:.5px;
-  text-shadow:
-    2px 2px 0 var(--ink),-2px 2px 0 var(--ink),2px -2px 0 var(--ink),-2px -2px 0 var(--ink),
-    0 3px 0 var(--ink),0 -3px 0 var(--ink),3px 0 0 var(--ink),-3px 0 0 var(--ink),
-    6px 7px 0 var(--ink);
-  transform:rotate(-2deg);transform-origin:left bottom;display:inline-block
-}
-h1 .oclock{color:var(--cheese)}
-.tag{margin:12px 0 0;font-weight:800;font-size:clamp(15px,2.2vw,19px);color:var(--ink-soft);max-width:56ch}
-.tag b{color:var(--ink)}
+/* ---------- views ---------- */
+main{max-width:720px;margin:0 auto;padding:30px 20px 150px}
+@media (max-width:719px){main{padding:22px 16px 170px}}
+.view{animation:vin .28s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.view-head{margin-bottom:22px}
+.view-head h1{font:500 34px/1.1 var(--fd);font-variation-settings:"SOFT" 70,"opsz" 40;letter-spacing:-.015em;margin:0 0 8px}
+.lede{color:var(--ink-2);font-size:16px;margin:0}
+@media (max-width:719px){.view-head h1{font-size:29px}}
 
-/* ---------- cards ---------- */
-.card{
-  background:var(--paper);border:3px solid var(--ink);border-radius:var(--radius);
-  box-shadow:var(--shadow), inset 0 -10px 0 rgba(120,80,30,.08), inset 0 8px 0 rgba(255,255,255,.75);
-  padding:26px 26px 28px;position:relative;
-}
-.card+.card{margin-top:26px}
-.card h2{
-  font-family:var(--font-display);font-weight:400;font-size:28px;margin:0 0 6px;letter-spacing:.3px;
-  display:flex;align-items:center;gap:10px
-}
-.card h2 .n{
-  display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;
-  background:var(--cheese);border:3px solid var(--ink);box-shadow:2px 3px 0 var(--ink);
-  font-size:18px;flex:none;transform:rotate(-6deg)
-}
-.sub{margin:0 0 18px;color:var(--ink-soft);font-weight:600}
+/* ---------- plan (questions) ---------- */
+.q{display:grid;grid-template-columns:210px 1fr;gap:10px 28px;padding:22px 0;border-top:1px solid var(--line)}
+.qs .q:first-child{border-top:0;padding-top:4px}
+.q-lbl{display:flex;align-items:center;gap:8px}
+.q-lbl label,.q-lbl span.l{font:600 16px/1.3 var(--fb);color:var(--ink)}
+.q-sub{font-size:13px;color:var(--ink-3);margin-top:4px;line-height:1.4}
+@media (max-width:719px){.q{grid-template-columns:1fr;gap:10px;padding:18px 0}}
+.info{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-2);background:none;color:var(--ink-3);font:600 12px/1 var(--fd);cursor:pointer;flex:none;display:inline-grid;place-items:center;padding:0;transition:.15s}
+.info:hover,.info.on{border-color:var(--tomato);color:var(--tomato)}
+.term{appearance:none;border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted var(--ink-3);text-underline-offset:3px;text-decoration-thickness:1.5px}
+.term:hover,.term.on{color:var(--tomato);text-decoration-color:var(--tomato)}
 
-/* ---------- form ---------- */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px 26px}
-.field{display:flex;flex-direction:column;gap:9px}
-.field>label{font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px}
-.field .hint{font-size:13.5px;color:var(--ink-soft);font-weight:600;margin-top:-4px}
-.field .hint.warn{color:var(--tomato-dark)}
-.inp{
-  font:inherit;font-weight:800;font-size:17px;color:var(--ink);
-  background:var(--flour);border:3px solid var(--ink);border-radius:18px;
-  padding:11px 14px;box-shadow:var(--shadow-sm);outline:none;width:100%;
-  transition:transform .12s, box-shadow .12s;
-}
-.inp:focus{transform:translate(2px,2px);box-shadow:2px 3px 0 var(--ink);border-color:var(--tomato)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{
-  font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;
-  background:var(--flour);border:2.5px solid var(--ink);border-radius:999px;padding:6px 12px;
-  box-shadow:2px 3px 0 var(--ink);transition:transform .1s, box-shadow .1s, background .15s;
-  color:var(--ink)
-}
-.chip:hover{background:var(--cheese)}
-.chip:active,.chip.on{transform:translate(2px,3px);box-shadow:0 0 0 var(--ink);background:var(--cheese)}
-.stepper{display:flex;align-items:center;gap:10px}
-.stepper button{
-  width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);background:var(--tomato);color:#fff;
-  font-family:var(--font-display);font-size:26px;line-height:1;cursor:pointer;box-shadow:3px 4px 0 var(--ink);
-  transition:transform .1s, box-shadow .1s
-}
-.stepper button:hover{background:#ee5a41}
-.stepper button:active{transform:translate(3px,4px);box-shadow:0 0 0 var(--ink)}
-.stepper button:disabled{opacity:.35;cursor:not-allowed}
-.stepper .val{
-  font-family:var(--font-display);font-size:34px;min-width:64px;text-align:center;
-  background:var(--flour);border:3px solid var(--ink);border-radius:18px;padding:2px 10px;box-shadow:var(--shadow-sm)
-}
-.stepper input{position:absolute;opacity:0;width:0;height:0}
-.pizzas{display:flex;flex-wrap:wrap;gap:3px;min-height:22px;font-size:18px;letter-spacing:-2px}
-.seg{display:flex;flex-wrap:wrap;gap:0;border:3px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);background:var(--flour)}
-.seg label{flex:1;min-width:56px;text-align:center;padding:10px 6px;cursor:pointer;font-weight:900;border-right:3px solid var(--ink);transition:background .15s;position:relative}
-.seg label:last-child{border-right:0}
-.seg input{position:absolute;opacity:0;inset:0;cursor:pointer}
-.seg label:has(input:checked){background:var(--basil);color:#fff}
-.seg label small{display:block;font-size:11px;font-weight:700;opacity:.8}
-.scale{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
-.range{-webkit-appearance:none;appearance:none;width:100%;height:18px;border-radius:999px;border:3px solid var(--ink);
-  background:linear-gradient(90deg,var(--ice) 0%,var(--flour) 40%,var(--cheese) 62%,var(--tomato) 100%);box-shadow:var(--shadow-sm);outline:none;margin:6px 0}
-.range::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:var(--flour);border:3px solid var(--ink);box-shadow:2px 3px 0 var(--ink);cursor:grab}
-.range::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--flour);border:3px solid var(--ink);box-shadow:2px 3px 0 var(--ink);cursor:grab}
-.temp-read{font-family:var(--font-display);font-size:30px;display:flex;align-items:baseline;gap:10px}
-.temp-read small{font-family:var(--font-body);font-size:14px;font-weight:800;color:var(--ink-soft)}
-details.adv{margin-top:22px;border-top:3px dashed rgba(59,35,20,.25);padding-top:14px}
-details.adv summary{cursor:pointer;font-weight:900;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:8px}
-details.adv summary::before{content:"▸";display:inline-block;transition:transform .2s}
-details.adv[open] summary::before{transform:rotate(90deg)}
-details.adv .grid{margin-top:16px}
-.btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:26px}
-.btn{
-  font-family:var(--font-display);font-size:22px;letter-spacing:.4px;color:#fff;cursor:pointer;
-  background:var(--tomato);border:3px solid var(--ink);border-radius:999px;padding:12px 28px;
-  box-shadow:var(--shadow);transition:transform .1s, box-shadow .1s, background .15s;display:inline-flex;align-items:center;gap:10px
-}
-.btn:hover{background:#ee5a41}
-.btn:active{transform:translate(4px,5px);box-shadow:2px 3px 0 var(--ink)}
-.btn.ghost{background:var(--flour);color:var(--ink);font-size:17px;padding:10px 20px;box-shadow:var(--shadow-sm);font-family:var(--font-body);font-weight:900}
-.btn.ghost:hover{background:var(--cheese)}
+.inp{width:100%;font:500 16px var(--fb);color:var(--ink);background:var(--card);border:1.5px solid var(--line-2);border-radius:var(--r-s);padding:11px 13px;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none;min-height:46px}
+select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E7E6C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:38px}
+.inp:focus{border-color:var(--tomato);box-shadow:0 0 0 4px var(--tomato-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{appearance:none;border:1.5px solid var(--line-2);background:var(--card);border-radius:999px;padding:6px 12px;font:600 13px var(--fb);color:var(--ink-2);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--ink-3);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.note{font-size:13px;color:var(--ink-3);margin-top:8px}
+.note.warn{color:var(--tomato-2);font-weight:600}
 
-/* ---------- results ---------- */
-#results{margin-top:34px}
-.reveal{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both}
-.reveal:nth-child(2){animation-delay:.08s}.reveal:nth-child(3){animation-delay:.16s}.reveal:nth-child(4){animation-delay:.24s}.reveal:nth-child(5){animation-delay:.32s}.reveal:nth-child(6){animation-delay:.4s}
-@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.count-row{display:flex;align-items:center;gap:14px}
+.count-row+.count-row{margin-top:10px}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line-2);border-radius:999px;background:var(--card);overflow:hidden}
+.stepper button{width:42px;height:42px;border:0;background:none;font:500 22px var(--fb);color:var(--ink-2);cursor:pointer;transition:.12s}
+.stepper button:hover{background:var(--paper-2);color:var(--ink)}
+.stepper button:disabled{opacity:.3;cursor:default;background:none}
+.stepper .val{min-width:46px;text-align:center;font:600 20px var(--fd);font-variation-settings:"opsz" 20}
+.stepper input{display:none}
+.count-lbl{color:var(--ink-2);font-size:15px}
 
-.now-card{background:var(--cheese);overflow:hidden}
-.now-card::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:44% 56% 62% 38%/48% 40% 60% 52%;background:rgba(255,255,255,.35);pointer-events:none}
-.now-kicker{font-weight:900;text-transform:uppercase;letter-spacing:2px;font-size:12.5px;color:var(--ink-soft)}
-.now-title{font-family:var(--font-display);font-size:clamp(26px,4.5vw,38px);line-height:1.05;margin:4px 0 8px}
-.now-when{font-weight:900;font-size:18px}
-.now-when .cd{display:inline-block;background:var(--ink);color:var(--cheese);border-radius:999px;padding:2px 12px;margin-left:6px;font-family:var(--font-display);letter-spacing:.5px}
-.now-detail{margin:8px 0 0;font-weight:600;max-width:64ch}
+.seg{position:relative;display:grid;grid-template-columns:repeat(5,1fr);border:1.5px solid var(--line-2);border-radius:var(--r-s);overflow:hidden;background:var(--card)}
+.seg label{display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;border-left:1px solid var(--line);font:600 15px var(--fb);transition:.12s}
+.seg label:first-child{border-left:0}
+.seg label:hover{background:var(--paper)}
+.seg label small{font-size:11px;font-weight:500;color:var(--ink-3);margin-top:2px;white-space:nowrap}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--ink);color:#fff}
+.seg label:has(input:checked) small{color:rgba(255,255,255,.7)}
+@media (max-width:719px){.seg label{font-size:14px;padding:9px 2px 7px}.seg label small{font-size:10px}}
 
-.plan-name{font-family:var(--font-display);font-size:24px;margin:0 0 6px}
-.plan-why{margin:0;font-weight:600}
-.badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-.badge{border:2.5px solid var(--ink);border-radius:999px;padding:4px 12px;font-weight:900;font-size:13.5px;background:var(--flour);box-shadow:2px 3px 0 var(--ink)}
-.badge.basil{background:var(--basil);color:#fff}.badge.ice{background:var(--ice)}.badge.tomato{background:var(--tomato);color:#fff}.badge.cheese{background:var(--cheese)}
+.temp-top{display:flex;align-items:baseline;gap:12px}
+.temp-big{font:500 46px/1 var(--fd);font-variation-settings:"opsz" 46,"SOFT" 40;letter-spacing:-.02em}
+.temp-big small{font-size:20px;color:var(--ink-3);margin-left:2px}
+.temp-word{color:var(--ink-2);font-size:14px}
+.range{width:100%;accent-color:var(--tomato);margin:8px 0 2px;height:28px}
+.scale{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3)}
+.wx{margin-top:12px;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 12px;border:1.5px dashed var(--line-2);border-radius:var(--r-s);background:var(--card);font-size:13px;color:var(--ink-2)}
+.wx small{display:block;color:var(--ink-3);margin-top:2px}
+.wx .chip{flex:none}
 
-.recipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:6px}
-.note{
-  background:var(--flour);border:3px solid var(--ink);border-radius:22px;padding:16px 18px;box-shadow:var(--shadow-sm);
-  transform:rotate(-.6deg)
-}
-.note:nth-child(2){transform:rotate(.7deg)}.note:nth-child(3){transform:rotate(-.4deg)}
-.note h3{font-family:var(--font-display);font-weight:400;font-size:21px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
-.note table{width:100%;border-collapse:collapse;font-weight:700}
-.note td{padding:5px 0;border-bottom:2px dotted rgba(59,35,20,.22)}
-.note tr:last-child td{border-bottom:0}
-.note td:last-child{text-align:right;font-family:var(--font-display);font-size:19px;letter-spacing:.3px;white-space:nowrap}
-.note td:last-child small{font-family:var(--font-body);font-size:12px;font-weight:800;color:var(--ink-soft)}
-.note .foot{font-size:13px;color:var(--ink-soft);font-weight:700;margin:10px 0 0}
-.yeast-hl{background:var(--cheese);border-radius:8px;padding:0 6px}
+.tune{margin-top:6px;border-top:1px solid var(--line)}
+.tune summary{list-style:none;display:flex;align-items:center;gap:12px;padding:20px 0;cursor:pointer;font:600 16px var(--fb)}
+.tune summary::-webkit-details-marker{display:none}
+.tune-sum{flex:1;font:500 13px var(--fb);color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tune summary svg{width:18px;height:18px;color:var(--ink-3);transition:transform .2s;flex:none}
+.tune[open] summary svg{transform:rotate(180deg)}
+.tune-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px;padding:2px 0 26px}
+@media (max-width:719px){.tune-grid{grid-template-columns:1fr}}
+.f label{display:flex;align-items:center;gap:8px;font:600 14px var(--fb);margin-bottom:6px}
+.f .row{display:flex;gap:10px;align-items:center}
+.f .row span{color:var(--ink-3)}
 
-/* timeline */
-.tl{position:relative;margin:10px 0 0;padding:0;list-style:none}
-.tl::before{content:"";position:absolute;left:31px;top:14px;bottom:14px;border-left:4px dashed var(--crust-dark);opacity:.55}
-.step{position:relative;display:grid;grid-template-columns:66px 1fr;gap:0 14px;padding:10px 0 12px}
-.step .node{
-  width:62px;height:62px;border-radius:50%;background:var(--flour);border:3px solid var(--ink);box-shadow:3px 4px 0 var(--ink);
-  display:grid;place-items:center;font-size:28px;position:relative;z-index:1
-}
-.step.wait .node{width:44px;height:44px;margin-left:9px;font-size:20px;background:var(--dough-2);box-shadow:2px 3px 0 var(--ink)}
-.step.fridge .node{background:var(--ice)}
-.step.oven .node{background:var(--tomato)}
-.step.done{opacity:.55}
-.step.done .node::after{content:"✓";position:absolute;right:-6px;bottom:-6px;width:24px;height:24px;border-radius:50%;background:var(--basil);color:#fff;border:2.5px solid var(--ink);font-size:13px;font-weight:900;display:grid;place-items:center}
-.step.next .node{animation:pulse 1.6s ease-in-out infinite;background:var(--cheese)}
-@keyframes pulse{0%,100%{box-shadow:3px 4px 0 var(--ink),0 0 0 0 rgba(228,69,43,.55)}50%{box-shadow:3px 4px 0 var(--ink),0 0 0 14px rgba(228,69,43,0)}}
-.step .body{padding-top:4px;min-width:0}
-.step .when{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:3px}
-.step .time{font-family:var(--font-display);font-size:21px;letter-spacing:.3px}
-.step .day{font-weight:900;font-size:12.5px;text-transform:uppercase;letter-spacing:1.4px;color:var(--ink-soft)}
-.step .dur{font-weight:900;font-size:12.5px;border:2px solid var(--ink);border-radius:999px;padding:1px 9px;background:var(--flour)}
-.step.fridge .dur{background:var(--ice)}
-.step.wait .dur{background:var(--dough-2)}
-.step .title{font-weight:900;font-size:18px;margin:0}
-.step.wait .title{font-size:16px;color:var(--ink-soft)}
-.step .detail{margin:4px 0 0;font-weight:600}
-.step .look{margin:6px 0 0;font-size:14px;font-weight:700;color:var(--basil-dark);background:rgba(79,156,62,.12);border-radius:12px;padding:6px 10px;display:inline-block}
-.step .look::before{content:"👀 ";}
-.tl-split{margin:18px 0 6px;display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-size:20px;color:var(--ink-soft)}
-.tl-split::before,.tl-split::after{content:"";flex:1;border-top:3px dotted rgba(59,35,20,.3)}
+/* ---------- sticky call to action ---------- */
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;justify-content:center;padding:12px 20px calc(14px + env(safe-area-inset-bottom));pointer-events:none}
+.cta-in{pointer-events:auto;display:flex;align-items:center;gap:14px;width:100%;max-width:680px;padding:8px 8px 8px 20px;background:var(--ink);color:#fff;border-radius:999px;box-shadow:0 14px 40px rgba(40,25,10,.3)}
+.cta-txt{flex:1;min-width:0;line-height:1.25}
+.cta-txt b{display:block;font:600 14px var(--fb);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cta-txt span{font-size:12px;color:rgba(255,255,255,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.cta-txt.bad b{color:#FFB4A6}
+.btn{appearance:none;border:0;background:var(--tomato);color:#fff;font:700 15px var(--fb);padding:12px 18px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .12s,background .15s;white-space:nowrap}
+.btn svg{width:16px;height:16px}
+.btn:hover{background:var(--tomato-2)} .btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:default}
+@media (max-width:719px){.cta{bottom:calc(72px + env(safe-area-inset-bottom));padding:8px 12px}.cta-in{padding-left:16px}.btn{padding:11px 14px;font-size:14px}}
 
-.warnings{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.warn{border:3px solid var(--ink);border-radius:18px;padding:12px 16px;font-weight:700;box-shadow:var(--shadow-sm);display:flex;gap:10px;align-items:flex-start}
-.warn.info{background:var(--ice)}.warn.warn{background:var(--cheese)}.warn.danger{background:var(--tomato);color:#fff}
-.warn .ic{font-size:20px;flex:none}
+/* ---------- schedule ---------- */
+.now{position:relative;overflow:hidden;background:var(--ink);color:#fff;border-radius:22px;padding:22px 24px 20px;margin-bottom:22px;isolation:isolate}
+.now::before{content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(228,180,92,.32),transparent 62%);z-index:-1}
+.now-k{font:700 11px var(--fb);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px}
+.now-k .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite}
+.now-t{font:500 27px/1.15 var(--fd);font-variation-settings:"opsz" 30,"SOFT" 60;margin:8px 0 6px;letter-spacing:-.01em}
+.now-w{font-size:15px;color:rgba(255,255,255,.72)}
+.now-w b{color:#fff;font-weight:600}
+.now-d{font-size:14px;color:rgba(255,255,255,.7);margin:10px 0 0;line-height:1.5}
+.prog{margin-top:18px;display:flex;align-items:center;gap:12px;font:600 12px var(--fb);color:rgba(255,255,255,.6)}
+.prog .bar{flex:1;height:5px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--gold);border-radius:99px;transition:width .6s ease}
+@media (max-width:719px){.now{padding:18px 18px 16px;border-radius:18px}.now-t{font-size:23px}}
 
-.explain details{border:3px solid var(--ink);border-radius:20px;background:var(--flour);box-shadow:var(--shadow-sm);margin-top:12px;overflow:hidden}
-.explain summary{cursor:pointer;padding:12px 18px;font-weight:900;font-size:17px;list-style:none;display:flex;align-items:center;gap:10px}
-.explain summary::-webkit-details-marker{display:none}
-.explain summary::after{content:"+";margin-left:auto;font-family:var(--font-display);font-size:24px}
-.explain details[open] summary::after{content:"–"}
-.explain .body{padding:0 18px 16px;font-weight:600}
-.explain .body p{margin:0 0 10px}
+.psum{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.plan-name{font:500 22px/1.2 var(--fd);font-variation-settings:"opsz" 24,"SOFT" 50}
+.why{color:var(--ink-2);font-size:15px;margin:0;line-height:1.55}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.stat{font:600 13px var(--fb);padding:5px 11px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink-2)}
+.stat.cold{background:var(--cold-soft);border-color:transparent;color:var(--cold)}
+.stat.hot{background:var(--ember-soft);border-color:transparent;color:#8A4A15}
 
-.empty{ text-align:center;padding:30px 10px;color:var(--ink-soft);font-weight:800;font-size:18px}
-.wx{margin-top:10px;background:var(--ice);border:3px solid var(--ink);border-radius:18px;padding:10px 14px;box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
-.wx-text{font-weight:800;font-size:14px}
-.wx-text small{display:block;font-weight:700;color:var(--ink-soft)}
-.coach{margin-top:26px}
-.chat{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
-.msg{max-width:88%;padding:10px 14px;border:3px solid var(--ink);border-radius:20px;font-weight:600;white-space:pre-wrap;box-shadow:var(--shadow-sm);line-height:1.45}
-.msg.user{align-self:flex-end;background:var(--cheese);border-bottom-right-radius:6px}
-.msg.bot{align-self:flex-start;background:var(--flour);border-bottom-left-radius:6px}
-.msg.bot.typing::after{content:"▍";animation:blink 1s steps(2) infinite}
-.chat-form{display:flex;gap:10px;align-items:flex-end}
-.chat-form textarea{flex:1;resize:vertical;min-height:52px}
-.chat-form .btn{font-size:18px;padding:12px 22px}
-footer{margin-top:40px;text-align:center;color:var(--ink-soft);font-weight:700;font-size:13.5px}
-.sr{position:absolute;left:-9999px}
+.notes{border:1px solid var(--line);background:var(--card);border-radius:var(--r);overflow:hidden;margin-top:6px}
+.notes summary{display:flex;align-items:center;gap:10px;padding:12px 16px;font:600 14px var(--fb);cursor:pointer;list-style:none}
+.notes summary::-webkit-details-marker{display:none}
+.notes summary .d{width:9px;height:9px;border-radius:50%;background:var(--gold);flex:none}
+.notes summary .d.danger{background:var(--tomato)}
+.notes summary .d.warn{background:var(--ember)}
+.notes summary svg{width:16px;height:16px;margin-left:auto;color:var(--ink-3);transition:transform .2s}
+.notes[open] summary svg{transform:rotate(180deg)}
+.warns{padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
+.warn{display:flex;gap:10px;font-size:14px;line-height:1.5;color:var(--ink-2);padding:10px 12px;border-radius:10px;background:var(--paper)}
+.warn.lvl-danger{background:var(--tomato-soft);color:var(--tomato-2)}
+.warn.lvl-warn{background:var(--ember-soft);color:#7A4614}
+.warn .ic{flex:none;width:8px;height:8px;border-radius:50%;background:currentColor;margin-top:7px;opacity:.7}
 
-@media (max-width:640px){
-  header{grid-template-columns:1fr;gap:10px}
-  .mascot{width:96px;height:96px}
-  .card{padding:20px 18px 22px;border-radius:26px}
-  .step{grid-template-columns:56px 1fr}
-  .step .node{width:52px;height:52px;font-size:24px}
-  .tl::before{left:26px}
-  .step.wait .node{margin-left:4px}
-}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin:0 0 4px}
+.mini{appearance:none;border:1.5px solid var(--line-2);background:var(--card);border-radius:999px;padding:7px 12px;font:600 13px var(--fb);color:var(--ink-2);cursor:pointer;display:inline-flex;gap:6px;align-items:center;transition:.15s}
+.mini svg{width:14px;height:14px}
+.mini:hover{color:var(--ink);border-color:var(--ink-3)}
+
+.tl{list-style:none;margin:0;padding:0}
+.tl-day{font:700 11px var(--fb);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:20px 0 10px 0}
+.tl-day:first-child{padding-top:8px}
+.step{display:grid;grid-template-columns:56px 34px 1fr;gap:0 10px;position:relative;cursor:default}
+.step .t{font:600 14px var(--fb);color:var(--ink-2);padding-top:13px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.step .t small{font-size:10px;font-weight:700;margin-left:2px;color:var(--ink-3);text-transform:uppercase}
+.step .node{position:relative;padding-top:8px}
+.step .node i{width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line-2);display:grid;place-items:center;color:var(--ink-2);position:relative;z-index:1;transition:.2s}
+.step .node i svg{width:17px;height:17px}
+.step .node::before{content:"";position:absolute;left:50%;top:44px;bottom:-4px;width:2px;margin-left:-1px;background:var(--line-2)}
+.step:last-child .node::before{display:none}
+.step.wait .node::before{background:repeating-linear-gradient(to bottom,var(--line-2) 0 4px,transparent 4px 9px)}
+.step.fridge .node::before{background:repeating-linear-gradient(to bottom,var(--cold) 0 4px,transparent 4px 9px)}
+.step .card{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:8px;transition:border-color .15s,box-shadow .15s}
+.step.has{cursor:pointer}
+.step.has:hover .card{border-color:var(--line-2)}
+.step .head{display:flex;align-items:center;gap:10px}
+.step .title{flex:1;font:600 15px/1.35 var(--fb)}
+.step .dur{font:600 12px var(--fb);color:var(--ink-3);padding:3px 9px;border-radius:999px;background:var(--paper);white-space:nowrap}
+.step.fridge .dur{background:var(--cold-soft);color:var(--cold)}
+.step.oven .dur{background:var(--ember-soft);color:#8A4A15}
+.step .chev{width:16px;height:16px;color:var(--ink-3);transition:transform .2s;flex:none}
+.step.open .chev{transform:rotate(180deg)}
+.step .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease}
+.step.open .more{grid-template-rows:1fr}
+.step .more>div{overflow:hidden}
+.step .detail{font-size:14px;color:var(--ink-2);margin:10px 0 2px;line-height:1.55}
+.step .look{font-size:13.5px;color:var(--ink-2);margin:10px 0 2px;padding:9px 11px;border-left:3px solid var(--gold);background:var(--paper);border-radius:0 8px 8px 0;line-height:1.5}
+.step .look::before{content:"Looks like: ";font-weight:700;color:var(--ink)}
+.step.wait .card{background:transparent;border-style:dashed;padding:9px 14px}
+.step.wait .title{font-weight:500;color:var(--ink-2)}
+.step.wait .node i{border-style:dashed;background:var(--paper)}
+.step.oven .node i{color:var(--ember)}
+.step.fridge .node i{color:var(--cold)}
+.step.done{opacity:.5}
+.step.done .node i{background:var(--basil);border-color:var(--basil);color:#fff}
+.step.cur{opacity:1}
+.step.cur .node i{background:var(--ink);border-color:var(--ink);color:#fff}
+.step.cur .card{border-color:var(--ink-3)}
+.step.next .card{border-color:var(--tomato);box-shadow:0 0 0 3px var(--tomato-soft)}
+.step.next .node i{border-color:var(--tomato);color:var(--tomato)}
+.tl.reveal .step{opacity:0;animation:vin .35s ease forwards;animation-delay:calc(var(--i,0)*45ms)}
+.tl.reveal .step.done{animation-name:vin-done}
+@keyframes vin-done{from{opacity:0;transform:translateY(8px)}to{opacity:.5;transform:none}}
+@media (max-width:719px){.step{grid-template-columns:44px 32px 1fr;gap:0 8px}.step .t{font-size:13px}.step .node i{width:32px;height:32px}.step .node::before{top:42px}.step .card{padding:10px 12px}.step .title{font-size:14.5px}}
+
+.tl-sec{margin:28px 0 4px;padding-top:20px;border-top:1px solid var(--line)}
+.tl-sec b{font:500 20px var(--fd);font-variation-settings:"opsz" 20,"SOFT" 50;display:block}
+.tl-sec p{margin:6px 0 0;color:var(--ink-2);font-size:14px;line-height:1.5}
+.foot{margin:26px 0 0;font-size:13px;color:var(--ink-3);line-height:1.5}
+.empty{padding:40px 24px;text-align:center;color:var(--ink-3);border:1.5px dashed var(--line-2);border-radius:var(--r)}
+.empty b{display:block;font:500 20px var(--fd);color:var(--ink);margin-bottom:6px}
+
+/* ---------- recipe ---------- */
+.rgrid{display:grid;gap:16px}
+.rcard{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 22px}
+.rcard h3{margin:0 0 6px;font:500 22px var(--fd);font-variation-settings:"opsz" 22,"SOFT" 50;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rcard h3 small{font:500 13px var(--fb);color:var(--ink-3)}
+.ing{display:flex;align-items:baseline;gap:8px;padding:9px 0}
+.ing span{color:var(--ink-2);font-size:15px}
+.ing .lead{flex:1;border-bottom:1.5px dotted var(--line-2);transform:translateY(-5px);min-width:14px}
+.ing b{font:600 18px var(--fd);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ing b small{font:500 12px var(--fb);color:var(--ink-3);margin-left:3px}
+.ing.hl b{color:var(--tomato)}
+.callout{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--paper);font-size:14px;color:var(--ink-2);line-height:1.5}
+.callout b{color:var(--ink)}
+.how{margin-top:12px;border-top:1px solid var(--line)}
+.how summary{list-style:none;display:flex;align-items:center;gap:8px;padding:12px 0 2px;font:600 14px var(--fb);color:var(--ink-2);cursor:pointer}
+.how summary::-webkit-details-marker{display:none}
+.how summary svg{width:14px;height:14px;transition:transform .2s;color:var(--ink-3)}
+.how[open] summary svg{transform:rotate(180deg)}
+.how p{margin:10px 0 4px;font-size:14px;color:var(--ink-2);line-height:1.55}
+@media (max-width:719px){.rcard{padding:16px 16px}}
+
+/* ---------- learn ---------- */
+.acc{border-top:1px solid var(--line)}
+.acc details{border-bottom:1px solid var(--line)}
+.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;font:500 18px var(--fd);font-variation-settings:"opsz" 18,"SOFT" 50;cursor:pointer}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary svg{width:16px;height:16px;color:var(--ink-3);flex:none;transition:transform .2s}
+.acc details[open] summary svg{transform:rotate(180deg)}
+.acc .body{padding:0 0 18px;color:var(--ink-2);font-size:15px;line-height:1.6}
+.acc .body p{margin:0 0 10px}
+.acc .body p:last-child{margin:0}
+.learn-h{font:700 11px var(--fb);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:30px 0 6px}
+
+/* ---------- popover / sheets ---------- */
+.scrim{position:fixed;inset:0;background:rgba(30,20,10,.38);z-index:30;opacity:0;transition:opacity .2s}
+.scrim.show{opacity:1}
+@media (min-width:720px){.scrim:not(.full){display:none!important}}
+.pop{position:fixed;z-index:31;width:min(360px,calc(100vw - 32px));background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 48px rgba(40,25,10,.22);padding:14px 16px 16px;font-size:14px;color:var(--ink-2);line-height:1.55;animation:vin .18s ease}
+.pop-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:6px}
+.pop-h b{flex:1;font:500 18px/1.25 var(--fd);font-variation-settings:"opsz" 18,"SOFT" 50;color:var(--ink)}
+.pop-h button{appearance:none;border:0;background:var(--paper);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink-2);flex:none}
+.pop-h button svg{width:14px;height:14px}
+.pop p{margin:0 0 8px} .pop p:last-child{margin:0}
+@media (max-width:719px){.pop{left:12px!important;right:12px;top:auto!important;bottom:calc(12px + env(safe-area-inset-bottom));width:auto;padding:18px 18px 22px;border-radius:18px;animation:up .22s ease}}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+
+.sheet{position:fixed;z-index:32;left:50%;bottom:0;transform:translateX(-50%);width:min(600px,100vw);max-height:82vh;background:var(--card);border-radius:22px 22px 0 0;box-shadow:0 -10px 50px rgba(40,25,10,.25);display:flex;flex-direction:column;animation:sheet .26s ease}
+@keyframes sheet{from{transform:translate(-50%,40px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+.sheet-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.sheet-h b{display:block;font:500 20px var(--fd);font-variation-settings:"opsz" 20,"SOFT" 50}
+.sheet-h span{display:block;font-size:13px;color:var(--ink-3);margin-top:2px}
+.sheet-h button{appearance:none;border:0;background:var(--paper);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink-2);flex:none}
+.sheet-h button svg{width:15px;height:15px}
+.chat{flex:1;overflow:auto;padding:14px 20px;display:flex;flex-direction:column;gap:10px;min-height:180px}
+.chat:empty::before{content:"Describe what the poolish or the balls look like, or what went wrong. The answer uses your current plan.";color:var(--ink-3);font-size:14px;text-align:center;margin:auto;padding:0 20px;line-height:1.5}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:14px;white-space:pre-wrap;line-height:1.5}
+.msg.user{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--paper);border-bottom-left-radius:4px}
+.msg.typing:empty::after{content:"…";animation:pulse 1s infinite}
+.chat-form{display:flex;gap:10px;padding:12px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.chat-form textarea{flex:1;resize:none;min-height:46px}
+.sheet .hint{padding:16px 20px;font-size:14px;color:var(--ink-2);line-height:1.5}
+
+/* ---------- print ---------- */
 @media print{
-  body::before,body::after,.mascot,#form,.btn-row,footer,.explain{display:none!important}
-  .card{box-shadow:none;break-inside:avoid}
-  .reveal{animation:none}
+  .top,.tabs,.cta,.acts,.scrim,.pop,.sheet,.coach-btn{display:none!important}
+  body{background:#fff}
+  main{max-width:none;padding:0}
+  #view-plan,#view-learn{display:none!important}
+  #view-schedule,#view-recipe{display:block!important;animation:none}
+  .now{background:#fff;color:#000;border:1px solid #000}
+  .now-k,.prog .bar i{color:#000;background:#000}
+  .step .more{grid-template-rows:1fr}
+  .step .chev{display:none}
+  .step.done{opacity:1}
+  .notes{display:block} .notes[open] summary svg{display:none}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<header>
-  <div class="mascot" aria-hidden="true">
-    <svg viewBox="0 0 140 140">
-      <ellipse class="shadow" cx="70" cy="122" rx="46" ry="9" fill="#3B2314" opacity=".35"/>
-      <g class="blob">
-        <path d="M70 18c30 0 52 20 52 48 0 26-20 46-52 46S18 92 18 66c0-28 22-48 52-48z" fill="#F6E7C4" stroke="#3B2314" stroke-width="4"/>
-        <path d="M34 60c6-18 20-28 38-28" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/>
-        <circle cx="42" cy="74" r="7" fill="#F7B2A3" opacity=".7"/><circle cx="98" cy="74" r="7" fill="#F7B2A3" opacity=".7"/>
-        <g class="eye" style="transform-origin:54px 64px"><circle cx="54" cy="64" r="4.5" fill="#3B2314"/></g>
-        <g class="eye" style="transform-origin:86px 64px"><circle cx="86" cy="64" r="4.5" fill="#3B2314"/></g>
-        <path d="M58 80q12 10 24 0" fill="none" stroke="#3B2314" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="30" cy="40" r="3" fill="#fff" opacity=".9"/><circle cx="110" cy="96" r="2.5" fill="#fff" opacity=".9"/>
-      </g>
-    </svg>
-  </div>
-  <div>
-    <h1>Dough <span class="oclock">O'Clock</span></h1>
-    <p class="tag">Tell it <b>when you're eating</b>. It tells you <b>what to do right now</b>, what to do in a few hours, and exactly how much yeast, water and flour — for maida in a 500°C CasaKoa. No guessing, no AI, just arithmetic.</p>
-  </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 13V9a5 5 0 0 1 10 0v4M12 16.5h.01"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 17H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.5 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 .8-3.2 2-4.5.2 2 1 3 2 3.5 0-3 .5-6 1-9z"/></symbol>
+    <symbol id="i-pizza" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 21h18z"/><path d="M6.5 14.5a10 10 0 0 1 11 0"/><circle cx="12" cy="18" r=".6"/><circle cx="10.5" cy="12" r=".6"/><circle cx="14" cy="15" r=".6"/></symbol>
+    <symbol id="i-hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></symbol>
+    <symbol id="i-bowl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M16 4l-4 7"/></symbol>
+    <symbol id="i-bubbles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="15" r="4.5"/><circle cx="16.5" cy="8.5" r="3.5"/><circle cx="17" cy="18" r="1.5"/></symbol>
+    <symbol id="i-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M12 3l-2 2M12 3l2 2M12 21l-2-2M12 21l2-2"/></symbol>
+    <symbol id="i-thermo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4a2 2 0 0 1 4 0v9.3a4 4 0 1 1-4 0z"/><path d="M12 9v6"/></symbol>
+    <symbol id="i-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7.5"/><path d="M8.5 12.5c.3-2 1.8-3.5 3.8-3.8"/></symbol>
+    <symbol id="i-poke" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v7"/><path d="M9 8l3 3 3-3"/><path d="M5 16a7 7 0 0 0 14 0"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+<header class="top">
+  <a class="brand" href="#plan" data-view="plan">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#F1DDB3" stroke="#231A13" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="#231A13" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1" fill="#fff"/></svg>
+    <span>Dough O'Clock</span>
+  </a>
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab on" data-view="plan"><svg><use href="#i-sliders"/></svg><span>Plan</span></button>
+    <button class="tab" data-view="schedule"><svg><use href="#i-clock"/></svg><span>Schedule</span></button>
+    <button class="tab" data-view="recipe"><svg><use href="#i-scale"/></svg><span>Recipe</span></button>
+    <button class="tab" data-view="learn"><svg><use href="#i-book"/></svg><span>Learn</span></button>
+  </nav>
+  <button class="coach-btn" id="coachOpen" hidden><svg><use href="#i-chat"/></svg><span>Ask the coach</span></button>
 </header>
 
-<!-- ================= INPUTS ================= -->
-<section class="card" id="form" aria-label="Your plan inputs">
-  <h2><span class="n">1</span> The plan</h2>
-  <p class="sub">Four questions. Everything else is worked out for you.</p>
+<main id="main">
 
-  <div class="grid">
-    <div class="field">
-      <label for="bakeAt">🍕 When do you want to eat pizza?</label>
-      <input class="inp" type="datetime-local" id="bakeAt" required>
-      <div class="chips" data-chips="bake">
-        <button type="button" class="chip" data-rel="today:20">Tonight 8pm</button>
-        <button type="button" class="chip" data-rel="1:13">Tomorrow 1pm</button>
-        <button type="button" class="chip" data-rel="1:20">Tomorrow 8pm</button>
-        <button type="button" class="chip" data-rel="2:20">Day after, 8pm</button>
-        <button type="button" class="chip" data-rel="sat:20">Saturday 8pm</button>
+<!-- ================= PLAN ================= -->
+<section class="view" id="view-plan">
+  <div class="view-head">
+    <h1>Plan a pizza night</h1>
+    <p class="lede">Five answers. The schedule, the yeast and the water temperature are worked out from them.</p>
+  </div>
+
+  <div class="qs">
+    <div class="q">
+      <div class="q-l">
+        <div class="q-lbl"><label for="bakeAt">When are you eating?</label><button class="info" data-info="bake" aria-label="About the pizza time">i</button></div>
+        <div class="q-sub">The moment the first pizza goes in.</div>
       </div>
-      <div class="hint" id="leadHint"></div>
+      <div class="q-r">
+        <input class="inp" type="datetime-local" id="bakeAt" required>
+        <div class="chips" data-chips="bake">
+          <button type="button" class="chip" data-rel="today:20">Tonight 8 pm</button>
+          <button type="button" class="chip" data-rel="1:13">Tomorrow 1 pm</button>
+          <button type="button" class="chip" data-rel="1:20">Tomorrow 8 pm</button>
+          <button type="button" class="chip" data-rel="2:20">Day after, 8 pm</button>
+          <button type="button" class="chip" data-rel="sat:20">Saturday 8 pm</button>
+        </div>
+        <div class="note" id="leadHint"></div>
+      </div>
     </div>
 
-    <div class="field">
-      <label>🥟 How many pizzas in total?</label>
-      <div class="stepper">
-        <button type="button" data-step="pizzas" data-d="-1" aria-label="fewer">–</button>
-        <div class="val" id="pizzasVal">4</div>
-        <button type="button" data-step="pizzas" data-d="1" aria-label="more">+</button>
-        <input type="number" id="pizzas" value="4" min="1" max="24">
+    <div class="q">
+      <div class="q-l">
+        <div class="q-lbl"><span class="l">How many pizzas?</span><button class="info" data-info="count" aria-label="About the number of pizzas">i</button></div>
+        <div class="q-sub">One ball per pizza.</div>
       </div>
-      <div class="pizzas" id="pizzaRow" aria-hidden="true"></div>
-      <div class="hint" id="ballHint"></div>
+      <div class="q-r">
+        <div class="count-row">
+          <div class="stepper">
+            <button type="button" data-step="pizzas" data-d="-1" aria-label="fewer">–</button>
+            <div class="val" id="pizzasVal">4</div>
+            <button type="button" data-step="pizzas" data-d="1" aria-label="more">+</button>
+            <input type="number" id="pizzas" value="4" min="1" max="24">
+          </div>
+          <span class="count-lbl">balls in total</span>
+        </div>
+        <div class="count-row">
+          <div class="stepper">
+            <button type="button" data-step="eatNow" data-d="-1" aria-label="fewer">–</button>
+            <div class="val" id="eatNowVal">4</div>
+            <button type="button" data-step="eatNow" data-d="1" aria-label="more">+</button>
+            <input type="number" id="eatNow" value="4" min="1" max="24">
+          </div>
+          <span class="count-lbl">eaten at that sitting</span>
+        </div>
+        <div class="note" id="ballHint"></div>
+      </div>
     </div>
 
-    <div class="field">
-      <label>😋 How many will you eat at that sitting?</label>
-      <div class="stepper">
-        <button type="button" data-step="eatNow" data-d="-1" aria-label="fewer">–</button>
-        <div class="val" id="eatNowVal">4</div>
-        <button type="button" data-step="eatNow" data-d="1" aria-label="more">+</button>
-        <input type="number" id="eatNow" value="4" min="1" max="24">
+    <div class="q" id="restField" hidden>
+      <div class="q-l">
+        <div class="q-lbl"><label for="restAt">When will you eat the rest?</label><button class="info" data-info="rest" aria-label="About the second sitting">i</button></div>
+        <div class="q-sub" id="leftHint"></div>
       </div>
-      <div class="hint" id="leftHint">All of them — no leftovers to plan for.</div>
+      <div class="q-r">
+        <input class="inp" type="datetime-local" id="restAt">
+        <div class="chips" data-chips="rest">
+          <button type="button" class="chip" data-relbake="+4">4 h later</button>
+          <button type="button" class="chip" data-relbake="+1d13">Next day, lunch</button>
+          <button type="button" class="chip" data-relbake="+1d20">Next day, dinner</button>
+          <button type="button" class="chip" data-relbake="+2d20">In 2 days</button>
+          <button type="button" class="chip" data-relbake="+5d20">In 5 days</button>
+        </div>
+        <div class="note" id="restHint"></div>
+      </div>
     </div>
 
-    <div class="field" id="restField" hidden>
-      <label for="restAt">🧊 When will you eat the rest?</label>
-      <input class="inp" type="datetime-local" id="restAt">
-      <div class="chips" data-chips="rest">
-        <button type="button" class="chip" data-relbake="+4">4 h later</button>
-        <button type="button" class="chip" data-relbake="+1d13">Next day, lunch</button>
-        <button type="button" class="chip" data-relbake="+1d20">Next day, dinner</button>
-        <button type="button" class="chip" data-relbake="+2d20">In 2 days</button>
-        <button type="button" class="chip" data-relbake="+5d20">In 5 days</button>
+    <div class="q">
+      <div class="q-l">
+        <div class="q-lbl"><span class="l">Hydration</span><button class="info" data-info="hydration" aria-label="About hydration">i</button></div>
+        <div class="q-sub">Water as a share of the flour.</div>
       </div>
-      <div class="hint" id="restHint"></div>
+      <div class="q-r">
+        <div class="seg" role="radiogroup" aria-label="Hydration">
+          <label><input type="radio" name="hyd" value="60">60%<small>firm</small></label>
+          <label><input type="radio" name="hyd" value="62">62%<small>chewy</small></label>
+          <label><input type="radio" name="hyd" value="65" checked>65%<small>sweet spot</small></label>
+          <label><input type="radio" name="hyd" value="68">68%<small>airy</small></label>
+          <label><input type="radio" name="hyd" value="70">70%<small>expert</small></label>
+        </div>
+      </div>
     </div>
 
-    <div class="field">
-      <label>💧 Hydration (water as % of flour)</label>
-      <div class="seg" role="radiogroup" aria-label="Hydration">
-        <label><input type="radio" name="hyd" value="60">60%<small>firm · easy</small></label>
-        <label><input type="radio" name="hyd" value="62">62%<small>Toss-like</small></label>
-        <label><input type="radio" name="hyd" value="65" checked>65%<small>sweet spot</small></label>
-        <label><input type="radio" name="hyd" value="68">68%<small>airy</small></label>
-        <label><input type="radio" name="hyd" value="70">70%<small>Vito · sticky</small></label>
+    <div class="q">
+      <div class="q-l">
+        <div class="q-lbl"><label for="temp">Kitchen temperature</label><button class="info" data-info="temp" aria-label="About the room temperature">i</button></div>
+        <div class="q-sub">Where the dough will sit.</div>
       </div>
-      <div class="hint">Maida is weak flour: lower = easier to handle and a chewier, more "bread-like" Toss crust. Higher = lighter and airier but sticky and tears more easily.</div>
-    </div>
-
-    <div class="field">
-      <label for="temp">🌡️ Room temperature right now (where the dough will sit)</label>
-      <div class="temp-read"><span id="tempVal">30°C</span><small id="tempWord">hot kitchen</small></div>
-      <input class="range" type="range" id="temp" min="8" max="42" step="1" value="30">
-      <div class="scale"><span>8° freezing</span><span>20° cool</span><span>26° ideal</span><span>32° hot</span><span>42°</span></div>
-      <div class="chips">
-        <button type="button" class="chip" data-temp="18">AC room 18°</button>
-        <button type="button" class="chip" data-temp="24">Pleasant 24°</button>
-        <button type="button" class="chip" data-temp="28">Warm 28°</button>
-        <button type="button" class="chip" data-temp="32">Hot 32°</button>
-        <button type="button" class="chip" data-temp="36">Scorching 36°</button>
-      </div>
-      <div class="wx" id="wx" hidden>
-        <div class="wx-text" id="wxText"></div>
-        <div class="chips"><button type="button" class="chip" id="wxApply">🌤️ Use the forecast</button></div>
+      <div class="q-r">
+        <div class="temp-top"><div class="temp-big"><span id="tempVal">30</span><small>°C</small></div><div class="temp-word" id="tempWord"></div></div>
+        <input class="range" type="range" id="temp" min="8" max="42" step="1" value="30" aria-label="Room temperature">
+        <div class="scale"><span>8°</span><span>20° cool</span><span>26° ideal</span><span>32° hot</span><span>42°</span></div>
+        <div class="chips">
+          <button type="button" class="chip" data-temp="18">AC room 18°</button>
+          <button type="button" class="chip" data-temp="24">Pleasant 24°</button>
+          <button type="button" class="chip" data-temp="28">Warm 28°</button>
+          <button type="button" class="chip" data-temp="32">Hot 32°</button>
+          <button type="button" class="chip" data-temp="36">Scorching 36°</button>
+        </div>
+        <div class="wx" id="wx" hidden>
+          <div class="wx-text" id="wxText"></div>
+          <button type="button" class="chip" id="wxApply">Use forecast</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <details class="adv">
-    <summary>Advanced (fridge, ball size, yeast, "now")</summary>
-    <div class="grid">
-      <div class="field">
-        <label for="fridge">🧊 Fridge temperature (°C)</label>
-        <input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5">
-        <div class="hint">Most home fridges are 3–7°C at the dough shelf. A fridge at 8°C ferments twice as fast as one at 4°C, so a Rs. 300 fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C the app shortens every cold hold.</div>
-      </div>
-      <div class="field">
-        <label for="ball">⚖️ Dough ball weight (g)</label>
-        <input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10">
-        <div class="hint">280g → stretch to 31–32 cm with a 2–3 mm centre (your thick 8–9 in pizzas were under-stretched). 250g → 29 cm.</div>
-      </div>
-      <div class="field">
-        <label for="salt">🧂 Salt</label>
-        <select class="inp" id="salt">
-          <option value="0.035" selected>3.5% — Toss-style, saltier, firmer (validated)</option>
-          <option value="0.030">3.0% — classic Neapolitan</option>
-        </select>
-        <div class="hint">Salt also slows the enzymes that weaken weak flour, so never go below 3% with maida.</div>
-      </div>
-      <div class="field">
-        <label for="preferCold">🧊 Cold-ferment the balls whenever possible</label>
-        <select class="inp" id="preferCold">
-          <option value="0" selected>Let the app decide</option>
-          <option value="1">Yes — more flavour, more steps</option>
-        </select>
-        <div class="hint">Needs roughly 30+ hours of lead time. The app switches to it automatically for long leads and for 31°C+ kitchens.</div>
-      </div>
-      <div class="field">
-        <label for="yeastType">🧫 Yeast</label>
-        <select class="inp" id="yeastType">
-          <option value="idy" selected>Instant dry (Saf-Instant)</option>
-          <option value="ady">Active dry (must be bloomed)</option>
-          <option value="fresh">Fresh (khameer)</option>
-        </select>
-        <div class="hint">Amounts are converted automatically (fresh ≈ 3× instant).</div>
-      </div>
-      <div class="field">
-        <label for="nowAt">⏰ "Now" (leave blank for the real clock)</label>
-        <input class="inp" type="datetime-local" id="nowAt">
-        <div class="hint">Useful for planning ahead: pretend it's a different time.</div>
-      </div>
-      <div class="field">
-        <label>😴 Asleep from / awake at</label>
-        <div style="display:flex;gap:10px;align-items:center">
-          <input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from">
-          <span style="font-weight:900">→</span>
-          <input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at">
-        </div>
-        <div class="hint">No hands-on step will be scheduled while you sleep — the fridge absorbs the difference.</div>
-      </div>
-      <div class="field">
-        <label for="nightTemp">🌡️ Night-time room temperature (°C)</label>
-        <input class="inp" type="number" id="nightTemp" placeholder="same as room" min="5" max="40" step="1">
-        <div class="hint">Optional. If your kitchen cools at night, waits that happen overnight are timed at this temperature.</div>
-      </div>
+  <details class="tune" id="tune">
+    <summary><span>Fine-tune</span><span class="tune-sum" id="tuneSum"></span><svg><use href="#i-chev"/></svg></summary>
+    <div class="tune-grid">
+      <div class="f"><label for="fridge">Fridge temperature <button class="info" data-info="fridge" aria-label="About the fridge">i</button></label><input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5"></div>
+      <div class="f"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"></div>
+      <div class="f"><label for="salt">Salt <button class="info" data-info="salt" aria-label="About salt">i</button></label>
+        <select class="inp" id="salt"><option value="0.035" selected>3.5% — saltier, firmer (validated)</option><option value="0.030">3.0% — classic Neapolitan</option></select></div>
+      <div class="f"><label for="preferCold">Cold-ferment the balls <button class="info" data-info="cold" aria-label="About cold fermenting">i</button></label>
+        <select class="inp" id="preferCold"><option value="0" selected>Let the app decide</option><option value="1">Whenever possible</option></select></div>
+      <div class="f"><label for="yeastType">Yeast <button class="info" data-info="yeastType" aria-label="About yeast types">i</button></label>
+        <select class="inp" id="yeastType"><option value="idy" selected>Instant dry (Saf-Instant)</option><option value="ady">Active dry (bloomed)</option><option value="fresh">Fresh (khameer)</option></select></div>
+      <div class="f"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button></label><input class="inp" type="datetime-local" id="nowAt"></div>
+      <div class="f"><label>Asleep between <button class="info" data-info="sleep" aria-label="About sleep hours">i</button></label>
+        <div class="row"><input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from"><span>and</span><input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at"></div></div>
+      <div class="f"><label for="nightTemp">Night temperature (°C) <button class="info" data-info="night" aria-label="About night temperature">i</button></label><input class="inp" type="number" id="nightTemp" placeholder="same as day" min="5" max="40" step="1"></div>
     </div>
   </details>
-
-  <div class="btn-row">
-    <button class="btn" id="go">🍕 Make my plan</button>
-    <button class="btn ghost" id="copy" hidden>📋 Copy plan as text</button>
-    <button class="btn ghost" id="print" hidden>🖨️ Print</button>
-  </div>
 </section>
 
-<!-- ================= RESULTS ================= -->
-<section id="results" aria-live="polite"></section>
+<!-- ================= SCHEDULE / RECIPE / LEARN (rendered) ================= -->
+<section class="view" id="view-schedule" hidden aria-live="polite"></section>
+<section class="view" id="view-recipe" hidden></section>
+<section class="view" id="view-learn" hidden></section>
 
-<!-- ================= DOUGH COACH (needs the hosted API) ================= -->
-<section class="card coach" id="coach" hidden>
-  <h2><span class="n">6</span> Ask the dough coach</h2>
-  <p class="sub" id="coachSub">Describe what your poolish or dough looks like, or what went wrong, and get a straight answer grounded in your plan and the research.</p>
+</main>
+</div>
+
+<div class="cta" id="cta">
+  <div class="cta-in">
+    <div class="cta-txt" id="ctaTxt"><b id="ctaPlan"></b><span id="ctaFirst"></span></div>
+    <button class="btn" id="go">See the schedule <svg><use href="#i-arrow"/></svg></button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="pop" id="pop" role="dialog" aria-modal="false" hidden>
+  <div class="pop-h"><b id="popTitle"></b><button id="popClose" aria-label="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div id="popBody"></div>
+</div>
+
+<div class="sheet" id="coachSheet" hidden>
+  <div class="sheet-h"><div><b>Dough coach</b><span id="coachSub">Troubleshooting grounded in your plan and the research.</span></div><button id="coachClose" aria-label="Close"><svg><use href="#i-close"/></svg></button></div>
   <div class="chat" id="chat"></div>
+  <div class="hint" id="coachHint" hidden></div>
   <form class="chat-form" id="chatForm">
-    <textarea class="inp" id="chatInput" rows="2" placeholder="e.g. My poolish has big bubbles but the middle has sunk — is it done? Or: I'm running 90 minutes late, what do I do with the balls?"></textarea>
+    <textarea class="inp" id="chatInput" rows="2" placeholder="e.g. Big bubbles on the poolish but the middle has sunk — is it done?"></textarea>
     <button class="btn" type="submit" id="chatSend">Ask</button>
   </form>
-  <div class="hint" id="coachHint" hidden></div>
-</section>
-
-<footer>
-  Deterministic dough maths for maida (80%) + fine chakki atta (20%), Saf-Instant yeast, 25% poolish, 3% olive oil, CasaKoa gas oven at 380–420°C floor. Built from TXCraig1's yeast chart, the AVPN 2024 regulation, and your own validated 3–3.5 h proof at 28°C.<br>
-  Times are for <b>your</b> local clock. Watch the dough, not the clock — the poke test always wins.
-</footer>
 </div>
 
 <script>
@@ -993,7 +1023,8 @@ const ENGINE = (() => {
   return { K, rCold, rPd, dRate, simulate, eqReady, EQ_ANCHOR, yForEQ, poolishPreset, recipe, waterTemp, build, fmtH, fmtT, fmtDT, PLAN_NAMES };
 })();
 /* ENGINE-END */
-
+</script>
+<script>
 /* ============================================================
    UI
    ============================================================ */
@@ -1003,19 +1034,92 @@ const ENGINE = (() => {
   const pad = n => String(n).padStart(2,'0');
   const toLocalInput = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   const fromLocalInput = v => v ? new Date(v) : null;
-  const fmtTime = d => d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+  const fmtTime = d => { const h = d.getHours(); return `${h%12||12}:${pad(d.getMinutes())} ${h>=12?'pm':'am'}`; };
+  const timeHTML = d => { const h = d.getHours(); return `${h%12||12}:${pad(d.getMinutes())}<small>${h>=12?'pm':'am'}</small>`; };
+  const fmtDate = d => d.toLocaleDateString(undefined,{weekday:'short', day:'numeric', month:'short'});
   const dayLabel = (d, now) => {
     const a = new Date(now); a.setHours(0,0,0,0);
     const b = new Date(d); b.setHours(0,0,0,0);
     const diff = Math.round((b-a)/864e5);
     if (diff === 0) return 'Today'; if (diff === 1) return 'Tomorrow'; if (diff === -1) return 'Yesterday';
-    return d.toLocaleDateString(undefined,{weekday:'short', day:'numeric', month:'short'});
+    return fmtDate(d);
   };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const tidyTimes = s => s.replace(/\b0?(\d{1,2}):(\d{2})\s?(AM|PM)\b/g, (m,h,mm,ap) => `${h}:${mm} ${ap.toLowerCase()}`);
+  const escT = s => tidyTimes(esc(s));
 
+  /* ---------------- views ---------------- */
+  const VIEWS = ['plan','schedule','recipe','learn'];
+  let view = 'plan';
+  function showView(v, opts = {}) {
+    if (!VIEWS.includes(v)) v = 'plan';
+    const changed = v !== view; view = v;
+    VIEWS.forEach(x => { $('#view-'+x).hidden = x !== v; });
+    $$('.tab').forEach(b => { const on = b.dataset.view === v; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); });
+    $('#cta').hidden = v !== 'plan';
+    if (opts.hash !== false && location.hash !== '#'+v) history.replaceState(null, '', '#'+v);
+    if (changed) window.scrollTo(0, 0);
+    closePop();
+  }
+  $$('[data-view]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); showView(b.dataset.view); }));
+  window.addEventListener('hashchange', () => showView(location.hash.slice(1) || 'plan', { hash: false }));
+
+  /* ---------------- on-demand explanations ---------------- */
+  const INFO = {
+    bake: { t: 'When are you eating?', b: `<p>The time the first pizza goes into the oven. Everything is scheduled backwards from it: the oven lights 45 minutes before, the balls must pass the poke test by then, and the poolish must be ripe before the dough is mixed.</p><p>More lead time means more flavour. Under 5 hours is an emergency straight dough, 5–9 hours gets a same-day poolish, overnight gets a fridge poolish, and two days or more gets cold-fermented balls.</p>` },
+    count: { t: 'How many pizzas', b: `<p>Balls you make now, one per pizza. Spare balls are planned separately: they go to the fridge for up to about 30 hours, or into the freezer beyond that.</p><p>Above 1500 g of flour the recipe is split into two mixer batches.</p>` },
+    rest: { t: 'The second sitting', b: `<p>Decides what happens to the spare balls. A gap of an hour or two: they proof with the others. Up to about 30 hours: they wait in the fridge un-proofed and come out a few hours before. Longer: they are frozen right after balling, thawed overnight in the fridge, and finished at room temperature.</p>` },
+    hydration: { t: 'Hydration', b: `<p>Water as a percentage of the flour by weight: 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven, so a lighter, airier crust, but the dough is stickier and tears more easily. Maida is a weak flour and cannot hold what Italian 00 holds: 62–65% is the sweet spot here, 70% is expert territory. In a hot kitchen stay at 65% or below.</p>` },
+    temp: { t: 'Kitchen temperature', b: `<p>The temperature where the dough will sit, not the outdoor reading. Yeast roughly doubles its pace every 8–10°C, so this number moves every wait in the plan.</p><p>Use the forecast to prefill it and the timeline follows the hourly curve, nights included. Above 31°C the ready window shrinks to about 30 minutes, so an AC room is worth entering instead.</p>` },
+    fridge: { t: 'Fridge temperature', b: `<p>Most home fridges sit at 3–7°C on the dough shelf. A fridge at 8°C ferments dough about twice as fast as one at 4°C, so a cheap fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C every cold hold is shortened.</p>` },
+    ball: { t: 'Ball weight', b: `<p>280 g stretches to 31–32 cm with a 2–3 mm centre. 250 g gives about 29 cm. Thick 8–9 inch pizzas are usually under-stretched balls, not too little dough.</p>` },
+    salt: { t: 'Salt', b: `<p>3.5% is the validated, saltier, firmer dough. 3% is the classic Neapolitan level. Salt also slows the enzymes that weaken weak flour, so never go below 3% with maida.</p>` },
+    cold: { t: 'Cold-fermenting the balls', b: `<p>The balls spend a day or more in the fridge and finish at room temperature. More flavour and a more open crumb, but more steps and roughly 30 hours of lead time. The app switches to it on its own for long leads and for kitchens at 31°C and above.</p>` },
+    yeastType: { t: 'Yeast', b: `<p>Amounts are converted automatically: fresh yeast is about three times the weight of instant, active dry a little more than instant and it must be bloomed in the water first. Weigh yeast on a 0.1 g scale. A level quarter teaspoon of instant is roughly 0.9 g.</p>` },
+    now: { t: 'Pretend "now"', b: `<p>Plan ahead by pretending it is a different time. Leave it blank and the app uses the real clock, refreshing the "right now" card every 30 seconds.</p>` },
+    sleep: { t: 'Sleep hours', b: `<p>No hands-on step is scheduled while you sleep. The fridge absorbs the difference. If a schedule cannot avoid it, the plan says how much later to bake instead.</p>` },
+    night: { t: 'Night temperature', b: `<p>Optional. If the kitchen cools at night, waits that fall between 22:00 and 07:00 are timed at this temperature. The forecast fills this in for you.</p>` },
+    poolish: { t: 'Poolish', b: `<p>A small starter: equal weights of water and flour with a pinch of yeast, fermented on its own before the real dough is mixed. About a quarter of the flour gets this head start.</p><p>It builds flavour and softens the gluten so the dough stretches easily. With weak flour it is the fastest route to a pizzeria-level crust.</p>` },
+    poke: { t: 'The poke test', b: `<p>Press a floured finger gently into a ball. Springs back slowly and only halfway: ready. Springs back fast: wait. The dent stays: over-proofed, still usable if you handle it gently, or re-ball it and give it 45 minutes.</p><p>It always beats the clock.</p>` },
+    ddt: { t: 'Dough temperature', b: `<p>The temperature of the dough right after mixing. It sets the pace of everything that follows, and water is the only ingredient whose temperature you can easily choose, so the app back-calculates the water from the flour, room and poolish temperatures plus the friction the mixer adds.</p>` },
+    fridgeword: { t: 'Room ferment and cold ferment', b: `<p>Yeast is fast when warm and very slow in the fridge. The fridge is a pause button that still lets flavour develop, so it is used whenever there is more time than the dough needs at room temperature.</p><p>Balls always finish at room temperature so they are soft and puffy for stretching.</p>` },
+    bulk: { t: 'Bulk and balls', b: `<p>Bulk is the whole dough resting as one mass right after mixing. Balls are what you divide it into; balling builds surface tension so each rises evenly and stretches round.</p><p>With weak flour the bulk stays short and the time goes into the balls. A long bulk with maida relaxes the gluten too much and the balls go slack.</p>` },
+  };
+  const pop = $('#pop'), scrim = $('#scrim'); let popAnchor = null;
+  function showScrim(full) { scrim.hidden = false; scrim.classList.toggle('full', !!full); requestAnimationFrame(() => scrim.classList.add('show')); }
+  function hideScrim() { scrim.classList.remove('show'); scrim.hidden = true; }
+  function openPop(id, anchor) {
+    const d = INFO[id]; if (!d) return;
+    $('#popTitle').textContent = d.t; $('#popBody').innerHTML = d.b;
+    pop.hidden = false; popAnchor = anchor; anchor.classList.add('on');
+    if (window.innerWidth < 720) showScrim(false);
+    placePop();
+  }
+  function placePop() {
+    if (!popAnchor || pop.hidden || window.innerWidth < 720) return;
+    const r = popAnchor.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    const left = Math.min(Math.max(12, r.left + r.width/2 - w/2), window.innerWidth - w - 12);
+    let top = r.bottom + 10; if (top + h > window.innerHeight - 12) top = Math.max(12, r.top - h - 10);
+    pop.style.left = left + 'px'; pop.style.top = top + 'px';
+  }
+  function closePop() { if (pop.hidden) return; pop.hidden = true; if ($('#coachSheet').hidden) hideScrim(); popAnchor?.classList.remove('on'); popAnchor = null; }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-info]');
+    if (b) { e.preventDefault(); e.stopPropagation(); if (popAnchor === b) closePop(); else { closePop(); openPop(b.dataset.info, b); } return; }
+    if (!pop.hidden && !pop.contains(e.target)) closePop();
+  });
+  $('#popClose').addEventListener('click', closePop);
+  scrim.addEventListener('click', () => { closePop(); closeCoach(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePop(); closeCoach(); } });
+  window.addEventListener('resize', placePop);
+  window.addEventListener('scroll', () => { if (!pop.hidden && window.innerWidth >= 720) closePop(); }, { passive: true });
+  // wrap the first mention of a glossary word in a tap-to-explain button
+  const TERMS = [[/\bpoolish\b/i,'poolish'],[/\bpoke[- ]test(ing)?\b/i,'poke'],[/\bhydration\b/i,'hydration'],[/\bcold[- ]ferment(ed|ing)?\b/i,'fridgeword'],[/\bdough temp(erature)?\b/i,'ddt'],[/\bbulk\b/i,'bulk']];
+  const terms = html => { let out = html; for (const [re, id] of TERMS) { out = out.replace(re, m => `<button class="term" data-info="${id}">${m}</button>`); } return out; };
+
+  /* ---------------- state ---------------- */
   const state = { pizzas:4, eatNow:4 };
   const KEY = 'dough-oclock-v1';
-
-  // --- restore ---
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved) {
@@ -1044,27 +1148,26 @@ const ENGINE = (() => {
       ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, preferCold: $('#preferCold').value })); } catch(e) {}
   }
 
-  // --- steppers ---
+  /* ---------------- form widgets ---------------- */
   function renderSteppers() {
     state.eatNow = Math.min(state.eatNow, state.pizzas);
     $('#pizzasVal').textContent = state.pizzas; $('#eatNowVal').textContent = state.eatNow;
     $('#pizzas').value = state.pizzas; $('#eatNow').value = state.eatNow;
-    $('#pizzaRow').textContent = '🍕'.repeat(Math.min(state.pizzas, 24));
     const left = state.pizzas - state.eatNow;
-    $('#leftHint').textContent = left ? `${left} spare ball${left>1?'s':''} — tell me when you'll eat ${left>1?'them':'it'}.` : 'All of them — no leftovers to plan for.';
+    $('#leftHint').textContent = left ? `${left} spare ball${left>1?'s':''} to plan for.` : '';
     $('#restField').hidden = !left;
-    const ball = +$('#ball').value || 250;
+    const ball = +$('#ball').value || 280;
     $('#ballHint').textContent = `${state.pizzas} × ${ball} g balls ≈ ${Math.round(state.pizzas*ball*1.02/(1+0.65+0.035+0.03)/5)*5} g flour`;
     $$('[data-step=eatNow][data-d="1"]')[0].disabled = state.eatNow >= state.pizzas;
+    $$('[data-step=pizzas][data-d="-1"]')[0].disabled = state.pizzas <= 1;
+    $$('[data-step=eatNow][data-d="-1"]')[0].disabled = state.eatNow <= 1;
   }
   $$('[data-step]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.step, d = +b.dataset.d;
     state[k] = Math.max(1, Math.min(24, state[k] + d));
-    if (k === 'pizzas' && d > 0 && state.eatNow === state.pizzas - 1 && !$('#restAt').value) {} // keep
     renderSteppers(); save(); compute();
   }));
 
-  // --- chips ---
   function relDate(spec) {
     const d = new Date();
     if (spec.startsWith('today:')) { d.setHours(+spec.split(':')[1],0,0,0); if (d < new Date()) d.setDate(d.getDate()+1); return d; }
@@ -1078,23 +1181,29 @@ const ENGINE = (() => {
     else d = new Date(base.getTime() + (+s)*3600e3);
     $('#restAt').value = toLocalInput(d); save(); compute();
   }));
-  $$('[data-temp]').forEach(c => c.addEventListener('click', () => { $('#temp').value = c.dataset.temp; renderTemp(); save(); compute(); }));
+  $$('[data-temp]').forEach(c => c.addEventListener('click', () => { $('#temp').value = c.dataset.temp; dropForecast(); renderTemp(); save(); compute(); }));
 
-  // --- temp ---
   function renderTemp() {
-    const t = +$('#temp').value; $('#tempVal').textContent = `${t}°C`;
-    $('#tempWord').textContent = t<=14?'cold room — slow dough':t<=19?'cool — slow and steady':t<=25?'ideal dough weather':t<=29?'warm — keep an eye on it':t<=33?'hot kitchen — fast dough':'scorching — dough races';
+    const t = +$('#temp').value; $('#tempVal').textContent = t;
+    $('#tempWord').textContent = t<=14?'cold room, slow dough':t<=19?'cool, slow and steady':t<=25?'ideal dough weather':t<=29?'warm, keep an eye on it':t<=33?'hot kitchen, fast dough':'scorching, the dough races';
     $$('[data-temp]').forEach(c => c.classList.toggle('on', +c.dataset.temp === t));
   }
   $('#temp').addEventListener('input', () => { renderTemp(); });
   $('#temp').addEventListener('change', () => { dropForecast(); save(); compute(); });
 
-  ['#bakeAt','#restAt','#fridge','#ball','#yeastType','#nowAt','#nightTemp','#sleepFrom','#wakeAt','#salt','#preferCold'].forEach(s => $(s).addEventListener('change', () => { renderSteppers(); save(); compute(); }));
+  function tuneSummary() {
+    const y = { idy:'instant yeast', ady:'active dry yeast', fresh:'fresh yeast' }[$('#yeastType').value];
+    const parts = [`${$('#fridge').value || 5}°C fridge`, `${$('#ball').value || 280} g balls`, `${Math.round((+$('#salt').value||0.035)*1000)/10}% salt`, y, `asleep ${$('#sleepFrom').value}–${$('#wakeAt').value}`];
+    if ($('#nightTemp').value !== '') parts.push(`${$('#nightTemp').value}°C at night`);
+    if ($('#preferCold').value === '1') parts.push('cold balls preferred');
+    if ($('#nowAt').value) parts.push('custom "now"');
+    $('#tuneSum').textContent = parts.join(' · ');
+  }
+  ['#bakeAt','#restAt','#fridge','#ball','#yeastType','#nowAt','#nightTemp','#sleepFrom','#wakeAt','#salt','#preferCold'].forEach(s => $(s).addEventListener('change', () => { renderSteppers(); tuneSummary(); save(); compute(); }));
   $$('input[name=hyd]').forEach(r => r.addEventListener('change', () => { save(); compute(); }));
-  $('#go').addEventListener('click', () => { compute(true); });
-  $('#print').addEventListener('click', () => window.print());
+  $('#go').addEventListener('click', () => { compute(); showView('schedule'); });
 
-  // --- compute + render ---
+  /* ---------------- compute ---------------- */
   let last = null, tick = null;
   const toMin = (v, d) => { const m = /^(\d{1,2}):(\d{2})$/.exec(v||''); return m ? (+m[1])*60 + (+m[2]) : d; };
   function readInputs() {
@@ -1107,153 +1216,200 @@ const ENGINE = (() => {
       sleepFrom: toMin($('#sleepFrom').value, 23.5*60), wakeAt: toMin($('#wakeAt').value, 7.5*60),
       salt: +$('#salt').value || 0.035, preferCold: $('#preferCold').value === '1', hourly: state.hourly || null };
   }
-  function compute(scroll) {
+  const nowRef = () => (fromLocalInput($('#nowAt').value) || new Date()).getTime();
+  function compute() {
     const inp = readInputs();
     const lead = inp.bake ? (inp.bake - inp.now)/3600e3 : null;
-    $('#leadHint').textContent = lead == null ? '' : lead < 0 ? 'That\'s in the past!' : `That's ${ENGINE.fmtH(lead)} from now.`;
+    $('#leadHint').textContent = lead == null ? '' : lead < 0 ? 'That is in the past.' : `${ENGINE.fmtH(lead)} from now.`;
     $('#leadHint').classList.toggle('warn', lead != null && lead < 5);
-    if (inp.rest && inp.bake) { const gap = (inp.rest - inp.bake)/3600e3; $('#restHint').textContent = gap > 0 ? `${ENGINE.fmtH(gap)} after the first pizza.` : 'Must be after the first sitting.'; }
-    if (!inp.bake || lead == null || lead < 0) { $('#results').innerHTML = `<div class="empty">Pick a pizza time in the future and the plan appears here. 🍕</div>`; return; }
+    if (inp.rest && inp.bake) { const gap = (inp.rest - inp.bake)/3600e3; $('#restHint').textContent = gap > 0 ? `${ENGINE.fmtH(gap)} after the first pizza.` : 'Must be after the first sitting.'; } else $('#restHint').textContent = '';
+    if (!inp.bake || lead == null || lead < 0) {
+      last = null; lastPlanKey = null;
+      $('#view-schedule').innerHTML = `<div class="empty"><b>Pick a pizza time in the future</b>The schedule appears here.</div>`;
+      $('#view-recipe').innerHTML = `<div class="empty"><b>No recipe yet</b>Pick a pizza time in the future first.</div>`;
+      setCta(null); return;
+    }
     last = ENGINE.build(inp);
-    render(last, inp);
-    $('#copy').hidden = !last.ok; $('#print').hidden = !last.ok;
-    if (scroll) $('#results').scrollIntoView({behavior:'smooth', block:'start'});
+    renderSchedule(last, inp);
+    renderRecipe(last, inp);
+    setCta(last, inp);
+  }
+  function setCta(r, inp) {
+    const t = $('#ctaTxt'); t.classList.toggle('bad', !r || !r.ok);
+    $('#go').disabled = !r;
+    if (!r) { $('#ctaPlan').textContent = 'Pick a pizza time in the future'; $('#ctaFirst').textContent = ''; return; }
+    if (!r.ok) { $('#ctaPlan').textContent = 'Not enough time for a dough'; $('#ctaFirst').textContent = 'Pick a later time, or read why'; return; }
+    const first = r.steps.find(s => s.kind !== 'wait') || r.steps[0];
+    $('#ctaPlan').textContent = r.planName;
+    $('#ctaFirst').textContent = `First step ${dayLabel(first.t, inp.now).toLowerCase()} ${fmtTime(first.t)} · pizza ${dayLabel(inp.bake, inp.now).toLowerCase()} ${fmtTime(inp.bake)}`;
   }
 
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  function stepHTML(s, now) {
-    const end = new Date(s.t.getTime() + (s.dur||0)*3600e3);
-    const done = end <= now && (s.dur ? true : s.t <= now);
-    const cls = ['step', s.kind, done?'done':''].join(' ');
-    return `<li class="${cls}" data-t="${s.t.getTime()}" data-end="${end.getTime()}">
-      <div class="node">${s.icon}</div>
-      <div class="body">
-        <div class="when"><span class="day">${esc(dayLabel(s.t, now))}</span><span class="time">${fmtTime(s.t)}</span>${s.dur ? `<span class="dur">${s.kind==='wait'||s.kind==='fridge'?'wait ':''}${ENGINE.fmtH(s.dur)}</span>`:''}</div>
-        <p class="title">${esc(s.title)}</p>
-        ${s.detail ? `<p class="detail">${esc(s.detail)}</p>`:''}
-        ${s.look ? `<p class="look">${esc(s.look)}</p>`:''}
+  /* ---------------- schedule view ---------------- */
+  const ICON = {'🔥':'flame','🍕':'pizza','⏳':'hourglass','🥣':'bowl','🫧':'bubbles','🧊':'snow','🌡️':'thermo','🥟':'ball','👉':'poke','❄️':'snow'};
+  const icon = e => ICON[e] ? `<svg><use href="#i-${ICON[e]}"/></svg>` : esc(e);
+  let lastPlanKey = null;
+  const openSteps = new Set();
+  const allSteps = r => [...r.steps, ...(r.leftovers?.steps||[])].sort((a,b)=>a.t-b.t);
+  const endOf = s => s.t.getTime() + (s.dur||0)*3600e3;
+
+  function stepHTML(s, i) {
+    const has = !!(s.detail || s.look);
+    const key = s.title.replace(/\d/g, '#');
+    return `<li class="step ${s.kind}${has?' has':''}${has && openSteps.has(key)?' open':''}" data-t="${s.t.getTime()}" data-end="${endOf(s)}" data-k="${esc(key)}" style="--i:${i}">
+      <div class="t">${timeHTML(s.t)}</div>
+      <div class="node"><i>${icon(s.icon)}</i></div>
+      <div class="card">
+        <div class="head"><div class="title">${esc(s.title)}</div>${s.dur ? `<span class="dur">${ENGINE.fmtH(s.dur)}${s.kind==='fridge'?' cold':''}</span>` : ''}${has ? `<svg class="chev"><use href="#i-chev"/></svg>` : ''}</div>
+        ${has ? `<div class="more"><div>${s.detail ? `<p class="detail">${terms(escT(s.detail))}</p>` : ''}${s.look ? `<p class="look">${escT(s.look)}</p>` : ''}</div></div>` : ''}
       </div></li>`;
   }
-  const PLAN_NAMES = { emergency:'Emergency straight dough', 'sameday-poolish':'Same-day poolish', 'overnight-poolish':'Overnight poolish, same-day dough', 'poolish-coldballs':'Overnight poolish + cold-fermented balls' };
-
-  function render(r, inp) {
-    const el = $('#results');
-    if (!r.ok) { lastPlanKey = null; el.innerHTML = `<div class="card"><div class="warnings">${r.warnings.map(w=>`<div class="warn ${w.level}"><span class="ic">⚠️</span><div>${esc(w.text)}</div></div>`).join('')}</div></div>`; return; }
-    const now = inp.now;
-    const all = allSteps(r);
-    const animate = lastPlanKey !== r.plan; lastPlanKey = r.plan;
-    const rv = animate ? ' reveal' : '';
-    const openIdx = [...el.querySelectorAll('.explain details')].map(d => d.open);
-    const rec = r.recipe, y = r.yeast;
-    const yName = {idy:'instant yeast', ady:'active dry yeast', fresh:'fresh yeast'}[inp.yeastType];
-    const yFmt = v => v < 1 ? `${(Math.round(v*20)/20).toFixed(2).replace(/0$/,'')} g` : `${Math.round(v*10)/10} g`;
-    const wt = rec.waterTemp, pwt = rec.poolishWaterTemp;
-    const waterLabel = t => t <= 8 ? 'ice-cold' : t <= 15 ? 'fridge-cold' : t <= 22 ? 'cool' : t <= 28 ? 'room temp' : 'lukewarm';
-
-    const nowHTML = nowCardHTML(all, now);
-
-    el.innerHTML = `
-      <div class="card now-card${rv}">${nowHTML}</div>
-      <div class="card${rv}">
-        <h2><span class="n">2</span> Your plan</h2>
-        <p class="plan-name">${esc(r.planName||r.plan)}</p>
-        <p class="plan-why">${esc(r.why)}</p>
-        <div class="badges">
-          <span class="badge cheese">${ENGINE.fmtH(r.lead)} lead time</span>
-          <span class="badge basil">${inp.hydration}% hydration</span>
-          <span class="badge tomato">${inp.pizzas} × ${inp.ball} g</span>
-          <span class="badge">${r.T}°C room${r.forecast?' · forecast':''}</span>
-          <span class="badge ice">${r.Tf}°C fridge</span>
-        </div>
-        ${r.warnings.length?`<div class="warnings" style="margin-top:16px">${r.warnings.map(w=>`<div class="warn ${w.level}"><span class="ic">${w.level==='danger'?'🚨':w.level==='warn'?'⚠️':'💡'}</span><div>${esc(w.text)}</div></div>`).join('')}</div>`:''}
-      </div>
-      <div class="card${rv}">
-        <h2><span class="n">3</span> The recipe</h2>
-        <p class="sub">${inp.pizzas} balls × ${inp.ball} g = ${Math.round(rec.totalDough)} g dough · ${rec.totalFlour} g flour total (80% maida, 20% fine chakki atta) · stretch to ${rec.diameterCm} cm</p>
-        <div class="recipe">
-          ${y.poolishShown>0?`<div class="note"><h3>🫧 Poolish</h3><table>
-            <tr><td>Water, ${waterLabel(pwt)} (~${pwt}°C)</td><td>${rec.poolish.water} <small>g</small></td></tr>
-            <tr><td>Maida</td><td>${rec.poolish.flour} <small>g</small></td></tr>
-            <tr><td>${esc(yName)}</td><td><span class="yeast-hl">${yFmt(y.poolishShown)}</span></td></tr>
-            ${rec.poolish.honey?`<tr><td>Honey</td><td>${rec.poolish.honey} <small>g</small></td></tr>`:''}</table>
-            <p class="foot">Whisk the yeast${rec.poolish.honey?' and honey':''} into the water first, then stir in the flour. Thick batter, not a dough. Weigh the yeast on a 0.1 g scale (a level ¼ tsp ≈ 0.9 g).</p></div>`:''}
-          <div class="note"><h3>🍞 Final dough</h3><table>
-            ${y.poolishShown>0?`<tr><td>All of the poolish</td><td>${rec.poolish.flour+rec.poolish.water} <small>g</small></td></tr>`:''}
-            <tr><td>Maida</td><td>${rec.final.maida} <small>g</small></td></tr>
-            <tr><td>Fine chakki atta</td><td>${rec.final.atta} <small>g</small></td></tr>
-            <tr><td>Water, ${waterLabel(wt.wt)} (~${wt.wt}°C)</td><td>${rec.final.water} <small>g</small></td></tr>
-            <tr><td>Fine pink salt</td><td>${rec.final.salt} <small>g</small></td></tr>
-            <tr><td>Extra-virgin olive oil</td><td>${rec.final.oil} <small>g</small></td></tr>
-            <tr><td>${esc(yName)}${y.poolishShown>0?' (extra)':''}</td><td><span class="yeast-hl">${y.finalShown < 0.05 ? 'none' : yFmt(y.finalShown)}</span></td></tr></table>
-            <p class="foot">Target dough temperature ${wt.DDT}°C, so the water is ~${wt.wt}°C. ${esc(wt.notes.join(' '))} Salt goes in after 3–4 min of mixing; oil last.</p></div>
-          <div class="note"><h3>🧂 For the bench</h3><table>
-            <tr><td>Sooji + maida dust (50/50)</td><td>~100 <small>g</small></td></tr>
-            <tr><td>Olive oil for hands/trays</td><td>a little</td></tr>
-            <tr><td>Sauce per pizza</td><td>50–60 <small>g</small></td></tr>
-            <tr><td>Fior di latte per pizza</td><td>100–120 <small>g</small></td></tr></table>
-            <p class="foot">Raw hand-crushed tomatoes, drained. Cheese drained 20 min. Basil after the bake.</p></div>
-        </div>
-      </div>
-      <div class="card${rv}">
-        <h2><span class="n">4</span> The timeline</h2>
-        <p class="sub">Every time is on your clock. Waits marked in blue happen in the fridge.</p>
-        <ol class="tl">${r.steps.map(s=>stepHTML(s, now)).join('')}</ol>
-        ${r.leftovers ? `<div class="tl-split">${r.leftovers.mode==='freezer'?'❄️':'🧊'} The ${r.leftovers.count} leftover ball${r.leftovers.count>1?'s':''}</div><p class="plan-why">${esc(r.leftovers.note)}</p>${r.leftovers.steps?.length?`<ol class="tl">${r.leftovers.steps.map(s=>stepHTML(s, now)).join('')}</ol>`:''}`:''}
-      </div>
-      <div class="card explain${rv}">
-        <h2><span class="n">5</span> Why it's like this</h2>
-        <p class="sub">The five things that confuse everyone, in plain words.</p>
-        ${EXPLAIN.map(e=>`<details><summary>${e.icon} ${esc(e.q)}</summary><div class="body">${e.a}</div></details>`).join('')}
-      </div>`;
-
-    el.querySelectorAll('.explain details').forEach((d, i) => { if (openIdx[i]) d.open = true; });
-    markSteps(all, now);
-    clearInterval(tick); tick = setInterval(updateCountdowns, 1000);
+  function tlHTML(steps, now) {
+    let lastDay = null, out = '';
+    steps.forEach((s, i) => {
+      const k = s.t.toDateString();
+      if (k !== lastDay) { lastDay = k; const d = dayLabel(s.t, now); out += `<li class="tl-day">${esc(d)}${/^(Today|Tomorrow|Yesterday)$/.test(d) ? ' · ' + esc(fmtDate(s.t)) : ''}</li>`; }
+      out += stepHTML(s, i);
+    });
+    return out;
   }
-
-  // ---- time-dependent bits, updated in place (no re-render, no animation) ----
-  let lastPlanKey = null;
-  const allSteps = r => [...r.steps, ...(r.leftovers?.steps||[])].sort((a,b)=>a.t-b.t);
+  function warnsHTML(ws, open) {
+    if (!ws.length) return '';
+    const top = ws.some(w => w.level === 'danger') ? 'danger' : ws.some(w => w.level === 'warn') ? 'warn' : 'info';
+    const n = ws.length;
+    return `<details class="notes"${open || top === 'danger' ? ' open' : ''}><summary><span class="d ${top}"></span>${n} thing${n>1?'s':''} to know<svg><use href="#i-chev"/></svg></summary>
+      <div class="warns">${ws.map(w => `<div class="warn lvl-${w.level}"><span class="ic"></span><div>${terms(escT(w.text))}</div></div>`).join('')}</div></details>`;
+  }
   function nowState(all, now) {
     const next = all.find(s => s.t > now);
-    const current = [...all].reverse().find(s => s.t <= now && new Date(s.t.getTime()+(s.dur||0)*3600e3) > now);
+    const current = [...all].reverse().find(s => s.t <= now && endOf(s) > now);
     return { next, current };
   }
-  function nowCardHTML(all, now) {
+  function nowCardHTML(r, all, now) {
     const { next, current } = nowState(all, now);
-    if (current) return `<div class="now-kicker">Right now</div><div class="now-title">${current.icon} ${esc(current.title)}</div><div class="now-when">until ${fmtTime(new Date(current.t.getTime()+current.dur*3600e3))}<span class="cd" data-cd="${current.t.getTime()+current.dur*3600e3}"></span></div>${current.detail?`<p class="now-detail">${esc(current.detail)}</p>`:''}`;
-    if (next) return `<div class="now-kicker">Next up</div><div class="now-title">${next.icon} ${esc(next.title)}</div><div class="now-when">${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}<span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-detail">${esc(next.detail)}</p>`:''}`;
-    return `<div class="now-kicker">Done</div><div class="now-title">🍕 Enjoy.</div>`;
+    const hands = r.steps.filter(s => s.kind !== 'wait');
+    const done = hands.filter(s => s.t <= now).length;
+    const t0 = r.steps[0].t.getTime(), t1 = r.inputs.bake.getTime();
+    const pct = t1 > t0 ? Math.max(0, Math.min(100, (now - t0) / (t1 - t0) * 100)) : 0;
+    let body;
+    if (current) body = `<div class="now-k"><span class="dot"></span>Right now</div><div class="now-t">${esc(current.title)}</div><div class="now-w">until <b>${fmtTime(new Date(endOf(current)))}</b> · <span class="cd" data-cd="${endOf(current)}"></span></div>${current.detail?`<p class="now-d">${escT(current.detail)}</p>`:''}`;
+    else if (next) body = `<div class="now-k">Next up</div><div class="now-t">${esc(next.title)}</div><div class="now-w"><b>${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}</b> · <span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-d">${escT(next.detail)}</p>`:''}`;
+    else body = `<div class="now-k">Done</div><div class="now-t">Enjoy the pizza.</div>`;
+    return body + `<div class="prog"><span>${done} of ${hands.length} steps</span><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div><span>pizza ${fmtTime(r.inputs.bake)}</span></div>`;
   }
   function updateCountdowns() {
-    document.querySelectorAll('#results [data-cd]').forEach(c => { const ms = +c.dataset.cd - Date.now(); c.textContent = ms <= 0 ? 'now' : 'in ' + ENGINE.fmtH(ms/3600e3); });
+    const ms0 = nowRef();
+    document.querySelectorAll('#view-schedule [data-cd]').forEach(c => { const ms = +c.dataset.cd - ms0; c.textContent = ms <= 0 ? 'now' : 'in ' + ENGINE.fmtH(ms/3600e3); });
   }
   function markSteps(all, now) {
-    const { next } = nowState(all, now); const nt = next ? next.t.getTime() : -1, ms = now.getTime();
-    document.querySelectorAll('#results .step').forEach(s => {
+    const { next, current } = nowState(all, now); const nt = next ? next.t.getTime() : -1, ct = current ? current.t.getTime() : -1, ms = now.getTime();
+    document.querySelectorAll('#view-schedule .step').forEach(s => {
       const t = +s.dataset.t, end = +s.dataset.end;
       s.classList.toggle('done', end <= ms && (end > t || t <= ms));
       s.classList.toggle('next', t === nt);
+      s.classList.toggle('cur', t === ct);
     });
     updateCountdowns();
   }
   function refreshNow() {
     if (!last?.ok || $('#nowAt').value) return;
     const now = new Date(), all = allSteps(last);
-    const card = $('#results .now-card'); if (card) card.innerHTML = nowCardHTML(all, now);
+    const card = $('#nowCard'); if (card) card.innerHTML = nowCardHTML(last, all, now);
     markSteps(all, now);
   }
 
-  const EXPLAIN = [
-    { icon:'🫧', q:'What is a poolish and why bother?', a:`<p>A poolish is a small "starter" dough: equal weights of water and flour with a pinch of yeast, left to ferment on its own before the real dough is mixed. Roughly a quarter of the flour gets a head start.</p><p>It gives the yeast time to build flavour and softens the gluten so the dough stretches easily. It is the fastest way to a pizzeria-level, slightly sweet, complex crust with weak flour like maida.</p>` },
-    { icon:'💧', q:'What does hydration actually mean?', a:`<p>Hydration is the water as a percentage of the flour, by weight. 1000 g flour + 650 g water = 65%.</p><p>More water → more steam in the oven → lighter, airier, crisper-outside crust, but the dough is stickier and tears more easily. Weak maida can't hold as much water as Italian 00, so 62–65% is the sweet spot here; 70% is expert mode.</p>` },
-    { icon:'🧊', q:'Room ferment vs cold ferment — when do we use which?', a:`<p>Yeast works fast when it's warm and very slowly in the fridge. The fridge is a pause button that still lets flavour develop, so we use it whenever there is more time than the dough needs at room temperature.</p><p>Short lead time (under ~9 h): everything at room temperature. Overnight: the poolish sleeps in the fridge. Two days or more: the dough balls sleep in the fridge too. Balls always finish at room temperature so they're soft and puffy for stretching.</p>` },
-    { icon:'🥟', q:'Bulk ferment vs ball ferment?', a:`<p>"Bulk" is the whole dough resting as one mass right after mixing; "ball" is after you divide it. Balling builds surface tension so each ball rises evenly and stretches into a round.</p><p>With weak flour we keep the bulk short (30 min) and put the time into the balls — a long bulk with maida means the gluten relaxes too much and the balls go slack.</p>` },
-    { icon:'🧫', q:'How is the yeast amount decided?', a:`<p>Yeast is time and temperature in a jar. Warmer = faster: roughly twice as fast for every 8–10°C. So the app converts every wait in your schedule into "hours at 25°C", then picks the yeast dose that makes the dough peak exactly at pizza time.</p><p>Longer or hotter → less yeast. Shorter or colder → more. Always weigh it on a 0.1 g scale; a level ¼ teaspoon of instant yeast is about 1 g.</p>` },
-    { icon:'👉', q:'How do I know it\'s ready? (the only test that matters)', a:`<p>Poolish: doubled, bubbly, domed or just starting to sink in the middle, smells yeasty and a little tangy. Slightly collapsed is peak flavour.</p><p>Balls: press a floured finger in gently. Springs back slowly and only halfway → ready. Springs back fast → wait. Dent stays → over-proofed; still usable, handle gently, or re-ball and give it 45 minutes.</p>` },
-  ];
+  function renderSchedule(r, inp) {
+    const el = $('#view-schedule');
+    if (!r.ok) { lastPlanKey = null; el.innerHTML = `<div class="view-head"><h1>Not enough time</h1><p class="lede">Even the emergency dough needs a minimum from flour to oven.</p></div>${warnsHTML(r.warnings, true)}`; return; }
+    const now = inp.now, all = allSteps(r);
+    const animate = lastPlanKey !== r.plan; lastPlanKey = r.plan;
+    const lo = r.leftovers;
+    el.innerHTML = `
+      <div class="now" id="nowCard">${nowCardHTML(r, all, now)}</div>
+      <div class="psum">
+        <div class="plan-name">${esc(r.planName || r.plan)}</div>
+        <p class="why">${terms(escT(r.why))}</p>
+        <div class="stats">
+          <span class="stat">${ENGINE.fmtH(r.lead)} lead</span>
+          <span class="stat${r.T >= 31 ? ' hot' : ''}">${r.T}°C room${r.forecast ? ' · forecast' : ''}</span>
+          <span class="stat">${inp.hydration}% hydration</span>
+          <span class="stat">${inp.pizzas} × ${inp.ball} g</span>
+          <span class="stat cold">${r.Tf}°C fridge</span>
+        </div>
+        ${warnsHTML(r.warnings)}
+      </div>
+      <div class="acts"><button class="mini" id="copy"><svg><use href="#i-copy"/></svg>Copy as text</button><button class="mini" id="print"><svg><use href="#i-print"/></svg>Print</button></div>
+      <ol class="tl${animate ? ' reveal' : ''}">${tlHTML(r.steps, now)}</ol>
+      ${lo ? `<div class="tl-sec"><b>The ${lo.count} spare ball${lo.count>1?'s':''}</b><p>${terms(escT(lo.note))}</p></div>${lo.steps?.length ? `<ol class="tl">${tlHTML(lo.steps, now)}</ol>` : ''}` : ''}
+      <p class="foot">Every time is on your clock. Tap a step for what to do and what it should look like. Watch the dough, not the clock: the <button class="term" data-info="poke">poke test</button> always wins.</p>`;
+    markSteps(all, now);
+    clearInterval(tick); tick = setInterval(updateCountdowns, 1000);
+    if (animate) setTimeout(() => el.querySelector(".tl.reveal")?.classList.remove("reveal"), r.steps.length * 45 + 500);
+  }
+  $('#view-schedule').addEventListener('click', e => {
+    if (e.target.closest('[data-info]')) return;
+    if (e.target.closest('#copy')) { copyPlan(); return; }
+    if (e.target.closest('#print')) { window.print(); return; }
+    const li = e.target.closest('.step.has'); if (!li) return;
+    li.classList.toggle('open');
+    if (li.classList.contains('open')) openSteps.add(li.dataset.k); else openSteps.delete(li.dataset.k);
+  });
 
-  // copy as text
+  /* ---------------- recipe view ---------------- */
+  const ing = (name, amt, unit, hl) => `<div class="ing${hl?' hl':''}"><span>${name}</span><i class="lead"></i><b>${amt}${unit?`<small>${unit}</small>`:''}</b></div>`;
+  function renderRecipe(r, inp) {
+    const el = $('#view-recipe');
+    if (!r.ok) { el.innerHTML = `<div class="empty"><b>No recipe yet</b>There is not enough time for a dough at that pizza time.</div>`; return; }
+    const rec = r.recipe, y = r.yeast;
+    const yName = {idy:'Instant yeast', ady:'Active dry yeast', fresh:'Fresh yeast'}[inp.yeastType];
+    const yFmt = v => v < 1 ? (Math.round(v*20)/20).toFixed(2).replace(/0$/,'') : String(Math.round(v*10)/10);
+    const wt = rec.waterTemp, pwt = rec.poolishWaterTemp;
+    const waterLabel = t => t <= 8 ? 'ice-cold' : t <= 15 ? 'fridge-cold' : t <= 22 ? 'cool' : t <= 28 ? 'room temperature' : 'lukewarm';
+    const hasPoolish = y.poolishShown > 0;
+    el.innerHTML = `
+      <div class="view-head"><h1>The recipe</h1><p class="lede">${inp.pizzas} balls × ${inp.ball} g · ${Math.round(rec.totalDough)} g dough · ${rec.totalFlour} g flour · stretch to ${rec.diameterCm} cm</p></div>
+      <div class="rgrid">
+        ${hasPoolish ? `<div class="rcard"><h3><button class="term" data-info="poolish">Poolish</button><small>made first</small></h3>
+          ${ing(`Water, ${waterLabel(pwt)} (~${pwt}°C)`, rec.poolish.water, 'g')}
+          ${ing('Maida', rec.poolish.flour, 'g')}
+          ${ing(yName, yFmt(y.poolishShown), 'g', true)}
+          ${rec.poolish.honey ? ing('Honey', rec.poolish.honey, 'g') : ''}
+          <details class="how"><summary>How to make it<svg><use href="#i-chev"/></svg></summary><p>Whisk the yeast${rec.poolish.honey?' and honey':''} into the water first, then stir in the flour: a thick batter, not a dough. Weigh the yeast on a 0.1 g scale. A level quarter teaspoon is about 0.9 g.</p></details></div>` : ''}
+        <div class="rcard"><h3>Final dough<small>${hasPoolish ? 'poolish goes in whole' : 'straight dough'}</small></h3>
+          ${hasPoolish ? ing('All of the poolish', rec.poolish.flour + rec.poolish.water, 'g') : ''}
+          ${ing('Maida', rec.final.maida, 'g')}
+          ${ing('Fine chakki atta', rec.final.atta, 'g')}
+          ${ing(`Water, ${waterLabel(wt.wt)} (~${wt.wt}°C)`, rec.final.water, 'g')}
+          ${ing('Fine pink salt', rec.final.salt, 'g')}
+          ${ing('Extra-virgin olive oil', rec.final.oil, 'g')}
+          ${ing(`${yName}${hasPoolish ? ' (extra)' : ''}`, y.finalShown < 0.05 ? 'none' : yFmt(y.finalShown), y.finalShown < 0.05 ? '' : 'g', true)}
+          <div class="callout">Target <button class="term" data-info="ddt">dough temperature</button> <b>${wt.DDT}°C</b>, so the water is about <b>${wt.wt}°C</b>. ${esc(wt.notes.join(' '))}</div>
+          <details class="how"><summary>How to mix<svg><use href="#i-chev"/></svg></summary><p>Flours, poolish and about 80% of the water on speed 1 for 3–4 minutes, then rest 10–20 minutes. Add the salt, then the remaining water, and knead 8–10 minutes on speed 1–2. Oil goes in last. Never above speed 2, bowl no more than half full.</p><p>Ready when it clings to the hook and pulls cleanly from the sides. Strandy or tearing? Stop, cover with a damp towel for 15–20 minutes, then knead 3–5 minutes more. Never add flour.</p></details></div>
+        <div class="rcard"><h3>On the bench<small>per pizza</small></h3>
+          ${ing('Sooji + maida dust (50/50)', '~100', 'g')}
+          ${ing('Sauce', '50–60', 'g')}
+          ${ing('Fior di latte', '100–120', 'g')}
+          ${ing('Olive oil for hands and trays', 'a little', '')}
+          <details class="how"><summary>Notes<svg><use href="#i-chev"/></svg></summary><p>Raw hand-crushed tomatoes, drained. Cheese drained for 20 minutes. Basil goes on after the bake. Stretch to ${rec.diameterCm} cm with a 2–3 mm centre; the first pizza is the calibration pizza.</p></details></div>
+      </div>`;
+  }
+
+  /* ---------------- learn view ---------------- */
+  const EXPLAIN = [
+    { q:'What is a poolish and why bother?', a:`<p>A poolish is a small starter dough: equal weights of water and flour with a pinch of yeast, left to ferment on its own before the real dough is mixed. Roughly a quarter of the flour gets a head start.</p><p>It gives the yeast time to build flavour and softens the gluten so the dough stretches easily. It is the fastest way to a pizzeria-level, slightly sweet, complex crust with weak flour like maida.</p>` },
+    { q:'What does hydration actually mean?', a:`<p>Hydration is the water as a percentage of the flour, by weight. 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven and a lighter, airier, crisper crust, but the dough is stickier and tears more easily. Weak maida cannot hold as much water as Italian 00, so 62–65% is the sweet spot here and 70% is expert mode.</p>` },
+    { q:'Room ferment or cold ferment?', a:`<p>Yeast works fast when it is warm and very slowly in the fridge. The fridge is a pause button that still lets flavour develop, so it is used whenever there is more time than the dough needs at room temperature.</p><p>Under about 9 hours: everything at room temperature. Overnight: the poolish sleeps in the fridge. Two days or more: the dough balls sleep in the fridge too. Balls always finish at room temperature so they are soft and puffy for stretching.</p>` },
+    { q:'Bulk ferment or ball ferment?', a:`<p>Bulk is the whole dough resting as one mass right after mixing; balls are what you divide it into. Balling builds surface tension so each ball rises evenly and stretches into a round.</p><p>With weak flour the bulk stays short (about 30 minutes) and the time goes into the balls. A long bulk with maida relaxes the gluten too much and the balls go slack.</p>` },
+    { q:'How is the yeast amount decided?', a:`<p>Yeast is time and temperature in a jar. Warmer is faster, roughly twice as fast for every 8–10°C. The app converts every wait in your schedule into hours at 25°C, then picks the dose that makes the dough peak exactly at pizza time.</p><p>Longer or hotter means less yeast; shorter or colder means more. Always weigh it on a 0.1 g scale. A level quarter teaspoon of instant yeast is about 0.9 g.</p>` },
+    { q:'How do I know it is ready?', a:`<p>Poolish: doubled, bubbly, domed or just starting to sink in the middle, smells yeasty and a little tangy. Slightly collapsed is peak flavour. Sunk well below its high-water mark and boozy: discard and remake.</p><p>Balls: press a floured finger in gently. Springs back slowly and only halfway means ready. Springs back fast means wait. The dent stays means over-proofed: still usable if handled gently, or re-ball and give it 45 minutes.</p>` },
+    { q:'Why does the plan change with the temperature?', a:`<p>Every wait is simulated in five-minute slices at the temperature the dough actually sees: your kitchen by day, the night temperature after 22:00, the fridge when it is inside, and the hourly forecast if you applied it. The dough ball also takes about an hour and a half to warm up or cool down, which is why it comes out of the fridge earlier than the proof alone would need.</p><p>Weak flour has a second clock: warm hours slowly break its gluten down. The plan keeps those hours under a comfort limit and uses the fridge, not the counter, to absorb spare time.</p>` },
+    { q:'What is this built for?', a:`<p>Maida (80%) with fine chakki atta (20%), Saf-Instant yeast, a 25% poolish, 3% olive oil, and a CasaKoa gas oven with the floor at 380–420°C for 60–90 second bakes.</p><p>The numbers come from TXCraig1's yeast chart, the AVPN 2024 regulation, and this kitchen's own validated 3–3.5 hour proof at 28°C. Times are always on your local clock.</p>` },
+  ];
+  $('#view-learn').innerHTML = `<div class="view-head"><h1>How it works</h1><p class="lede">The things that confuse everyone, in plain words. Tap a question.</p></div>
+    <div class="acc">${EXPLAIN.map(e => `<details><summary>${esc(e.q)}<svg><use href="#i-chev"/></svg></summary><div class="body">${e.a}</div></details>`).join('')}</div>
+    <div class="learn-h">Glossary</div>
+    <div class="acc">${['poolish','poke','ddt','fridgeword','bulk','hydration'].map(k => `<details><summary>${esc(INFO[k].t)}<svg><use href="#i-chev"/></svg></summary><div class="body">${INFO[k].b}</div></details>`).join('')}</div>`;
+
+  /* ---------------- copy as text ---------------- */
   function planText() {
     const r = last, inp = r.inputs, y = r.yeast;
     const L = [];
@@ -1267,12 +1423,12 @@ const ENGINE = (() => {
     if (r.warnings.length) { L.push(''); r.warnings.forEach(w => L.push(`! ${w.text}`)); }
     return L.join('\n');
   }
-  $('#copy').addEventListener('click', async () => {
-    if (!last?.ok) return; const txt = planText();
-    try { await navigator.clipboard.writeText(txt); $('#copy').textContent = '✅ Copied'; setTimeout(()=>$('#copy').textContent='📋 Copy plan as text', 1600); } catch(e) { alert(txt); }
-  });
+  async function copyPlan() {
+    if (!last?.ok) return; const txt = planText(); const b = $('#copy');
+    try { await navigator.clipboard.writeText(txt); if (b) { b.innerHTML = 'Copied'; setTimeout(() => { if ($('#copy')) $('#copy').innerHTML = '<svg><use href="#i-copy"/></svg>Copy as text'; }, 1600); } } catch(e) { alert(txt); }
+  }
 
-  // ---------- weather (Open-Meteo, no key) → suggested day/night temps + hourly series for the timeline ----------
+  /* ---------------- weather (Open-Meteo, no key) ---------------- */
   const WX = { lat: 33.69, lon: 73.04, name: 'Islamabad', dayOffset: 2, nightOffset: 3 };
   let wx = null;
   async function loadWeather() {
@@ -1292,31 +1448,36 @@ const ENGINE = (() => {
         night: Math.round((night.length ? Math.min(...night) : Math.min(...next.map(h => h.out))) + WX.nightOffset),
         hourly: hours.map(h => { const hr = new Date(h.t).getHours(); const night = hr >= 22 || hr < 7; return { t: h.t, T: Math.round((h.out + (night ? WX.nightOffset : WX.dayOffset)) * 10) / 10 }; }),
       };
-      $('#wxText').innerHTML = `🌤️ ${WX.name} now ${wx.now}° outside · next 24 h ${wx.lo}–${wx.hi}°<small>Kitchen estimate: ${wx.room}° by day, ${wx.night}° at night (outdoor +${WX.dayOffset}/+${WX.nightOffset}). The timeline then follows the hourly forecast.</small>`;
+      $('#wxText').innerHTML = `<b>${WX.name}</b> ${wx.now}° outside now · ${wx.lo}–${wx.hi}° over the next 24 h<small>Kitchen estimate ${wx.room}° by day, ${wx.night}° at night. The timeline then follows the hourly forecast.</small>`;
       $('#wx').hidden = false;
       if (!localStorage.getItem(KEY)) applyWeather();
-    } catch (e) { /* offline or blocked: the sliders still work */ }
+    } catch (e) { /* offline or blocked: the slider still works */ }
   }
   function applyWeather() {
     if (!wx) return;
     $('#temp').value = Math.max(8, Math.min(42, wx.room)); $('#nightTemp').value = wx.night;
-    state.hourly = wx.hourly; renderTemp(); $('#wxApply').classList.add('on'); $('#wxApply').textContent = '🌤️ Forecast in use';
+    state.hourly = wx.hourly; renderTemp(); tuneSummary(); $('#wxApply').classList.add('on'); $('#wxApply').textContent = 'Forecast in use';
     save(); compute();
   }
   $('#wxApply').addEventListener('click', applyWeather);
-  function dropForecast() { if (state.hourly) { state.hourly = null; $('#wxApply').classList.remove('on'); $('#wxApply').textContent = '🌤️ Use the forecast'; } }
+  function dropForecast() { if (state.hourly) { state.hourly = null; $('#wxApply').classList.remove('on'); $('#wxApply').textContent = 'Use forecast'; } }
 
-  // ---------- dough coach (hosted API; hidden when not available) ----------
+  /* ---------------- dough coach (hosted API; hidden when not available) ---------------- */
   const chat = [];
+  let coachInfo = null;
   async function initCoach() {
     if (location.protocol === 'file:') return;
     try {
-      const j = await (await fetch('/api/coach')).json();
-      $('#coach').hidden = false;
-      if (!j.enabled) { $('#chatForm').hidden = true; $('#chat').hidden = true; $('#coachHint').hidden = false; $('#coachHint').textContent = 'Not switched on yet: add ANTHROPIC_API_KEY in the Vercel project settings (Settings → Environment Variables) and redeploy.'; }
-      else $('#coachSub').textContent += ` Answers come from ${j.model} and see your current plan.`;
+      coachInfo = await (await fetch('/api/coach')).json();
+      $('#coachOpen').hidden = false;
+      if (!coachInfo.enabled) { $('#chatForm').hidden = true; $('#chat').hidden = true; $('#coachHint').hidden = false; $('#coachHint').textContent = 'Not switched on yet: add ANTHROPIC_API_KEY in the Vercel project settings (Settings → Environment Variables) and redeploy.'; }
+      else $('#coachSub').textContent = `Answers come from ${coachInfo.model} and see your current plan.`;
     } catch (e) { /* no API here */ }
   }
+  function openCoach() { closePop(); $('#coachSheet').hidden = false; showScrim(true); setTimeout(() => $('#chatInput').focus(), 50); }
+  function closeCoach() { if ($('#coachSheet').hidden) return; $('#coachSheet').hidden = true; hideScrim(); }
+  $('#coachOpen').addEventListener('click', openCoach);
+  $('#coachClose').addEventListener('click', closeCoach);
   function addMsg(role, text) { const d = document.createElement('div'); d.className = 'msg ' + role; d.textContent = text; $('#chat').appendChild(d); d.scrollIntoView({ block: 'nearest' }); return d; }
   $('#chatForm').addEventListener('submit', async (ev) => {
     ev.preventDefault();
@@ -1333,9 +1494,11 @@ const ENGINE = (() => {
     } catch (e) { bot.textContent = 'Could not reach the coach. Check your connection.'; }
     bot.classList.remove('typing'); $('#chatSend').disabled = false; bot.scrollIntoView({ block: 'nearest' });
   });
+  $('#chatInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#chatForm').requestSubmit(); } });
 
-  renderSteppers(); renderTemp(); compute(); loadWeather(); initCoach();
-  // update the "right now" card and step markers in place every 30 s (no re-render)
+  /* ---------------- boot ---------------- */
+  renderSteppers(); renderTemp(); tuneSummary(); compute(); loadWeather(); initCoach();
+  showView(location.hash.slice(1) || 'plan', { hash: false });
   setInterval(refreshNow, 30000);
 })();
 </script>
