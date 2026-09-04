@@ -80,7 +80,7 @@ No extra yeast goes into the final dough except in cold kitchens where the proof
 | Emergency direct | < ~5–6 h | mix → 15 min rest → ball → proof; yeast solved from Craig's chart ×1.2 safety (0.10–0.70 %) |
 | Same-day poolish | ~5–9 h | poolish on the counter until ripe → mix → 30 min rest → ball → room proof |
 | Overnight poolish + same-day balls (default) | ~9–30 h | poolish warm → fridge 3–24 h → mix → rest → ball → room proof (3.2 h at 28 °C, 2.6 h at 32 °C, 5 h at 20 °C, 8 h at 16 °C) |
-| Overnight poolish + cold balls | ≥ ~30 h, or any lead in a ≥ 31 °C kitchen, or by choice | as above but balls get a 30–90 min head start, then 8–30 h in the fridge, then come out 2.5–4 h before baking to finish rising **and** warm through (cold dough tears and blisters at 500 °C) |
+| Overnight poolish + cold balls | chosen by the app, never by hand: lead beyond what the poolish can absorb (≥ ~30 h), or any lead in a ≥ 31 °C kitchen, or when the room plan would put a step in the sleep window | as above but balls get a 30–90 min head start, then 8–30 h in the fridge, then come out 2.5–4 h before baking to finish rising **and** warm through (cold dough tears and blisters at 500 °C) |
 
 The room proof is solved by bisection so that fermentation hits `EQ_READY` 15 minutes before the first launch;
 poke-testing starts at 80 % and the ready window ends at 120 % (≈ 45 min at 28 °C, 30 min at 32 °C).

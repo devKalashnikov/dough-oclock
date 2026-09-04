@@ -520,8 +520,6 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
       <div class="f" data-auto="ball"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button><button type="button" class="auto" data-auto-for="ball">Auto</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"><div class="note auto-note"></div></div>
       <div class="f" data-auto="salt"><label for="salt">Salt <button class="info" data-info="salt" aria-label="About salt">i</button><button type="button" class="auto" data-auto-for="salt">Auto</button></label>
         <select class="inp" id="salt"><option value="0.035" selected>3.5% — validated, firmer</option><option value="0.030">3.0% — classic Neapolitan</option></select><div class="note auto-note"></div></div>
-      <div class="f"><label for="preferCold">Cold-ferment the balls <button class="info" data-info="cold" aria-label="About cold fermenting">i</button></label>
-        <select class="inp" id="preferCold"><option value="0" selected>Let the app decide</option><option value="1">Whenever possible</option></select></div>
       <div class="f"><label for="yeastType">Yeast <button class="info" data-info="yeastType" aria-label="About yeast types">i</button></label>
         <select class="inp" id="yeastType"><option value="idy" selected>Instant dry (Saf-Instant)</option><option value="ady">Active dry (bloomed)</option><option value="fresh">Fresh (khameer)</option></select></div>
       <div class="f" data-auto="now"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button><button type="button" class="auto" data-auto-for="now">Auto</button></label><input class="inp" type="datetime-local" id="nowAt"><div class="note auto-note"></div></div>
@@ -1122,7 +1120,7 @@ const ENGINE = (() => {
     fridge: { t: 'Fridge temperature', b: `<p>Most home fridges sit at 3–7°C on the dough shelf. A fridge at 8°C ferments dough about twice as fast as one at 4°C, so a cheap fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C every cold hold is shortened.</p>` },
     ball: { t: 'Ball weight', b: `<p>280 g stretches to 31–32 cm with a 2–3 mm centre. 250 g gives about 29 cm. Thick 8–9 inch pizzas are usually under-stretched balls, not too little dough.</p>` },
     salt: { t: 'Salt: how much, and when', b: `<p><b>How much:</b> 3.5% of the flour is the validated dough: saltier, and it tightens weak maida gluten so the dough is firmer and less sticky. 3% is the classic Neapolitan level. Never go below 3% with maida: salt also brakes the enzymes that turn weak flour slack. The app already slows its yeast maths for the salt you choose.</p><p><b>When:</b> not at the start. Mix flours, poolish and 80% of the water for 3–4 minutes, rest 10–20 minutes so the slow-hydrating maida drinks, then add the salt and mix one minute, then the remaining water in a slow stream. Early salt holds back that first gluten formation; late salt tightens a dough that has already hydrated.</p><p>If you ever go the Neapolitan way instead (salt dissolved in the water first), keep yeast and salt from sitting together for more than 5 minutes.</p>` },
-    cold: { t: 'Cold-fermenting the balls', b: `<p>The balls spend a day or more in the fridge and finish at room temperature. More flavour and a more open crumb, but more steps and roughly 30 hours of lead time. The app switches to it on its own for long leads and for kitchens at 31°C and above.</p>` },
+    cold: { t: 'Cold balls or room balls?', b: `<p>The poolish always gets the fridge overnight: that is where most of the flavour comes from. The balls only go into the fridge too when it is worth it, and the app decides that for you.</p><p><b>Cold balls</b> need at least 8 hours cold and then 2.5–4 hours to warm back up (cold dough tears and blisters at 500°C), all after the poolish has had its own 12 hours. So they win when there is more time than the poolish can absorb (roughly 30 hours or more), when the kitchen is 31°C or hotter (a room proof would be ready for only 30 minutes), or when the room plan would land a step in your sleep.</p><p><b>Room balls</b> win under about 30 hours: with 16 hours, for example, a cold ball stage would be too short to add flavour and would only add the warm-up risk.</p>` },
     yeastType: { t: 'Yeast', b: `<p>Amounts are converted automatically: fresh yeast is about three times the weight of instant, active dry a little more than instant and it must be bloomed in the water first. Weigh yeast on a 0.1 g scale. A level quarter teaspoon of instant is roughly 0.9 g.</p>` },
     now: { t: 'Pretend "now"', b: `<p>Plan ahead by pretending it is a different time. Leave it blank and the app uses the real clock, refreshing the "right now" card every 30 seconds.</p>` },
     sleep: { t: 'Sleep hours', b: `<p>No hands-on step is scheduled while you sleep. The fridge absorbs the difference. If a schedule cannot avoid it, the plan says how much later to bake instead.</p><p>"Don't care" removes the window: the plan is then free to put a step at any hour, which can shorten the schedule.</p>` },
@@ -1185,7 +1183,6 @@ const ENGINE = (() => {
       if (saved.sleepFrom) $('#sleepFrom').value = saved.sleepFrom;
       if (saved.wakeAt) $('#wakeAt').value = saved.wakeAt;
       if (saved.salt) $('#salt').value = saved.salt;
-      if (saved.preferCold) $('#preferCold').value = saved.preferCold;
       if (saved.auto) Object.assign(AUTO, saved.auto);
       else { // older save without Auto flags: keep whatever they had, treat untouched defaults as Auto
         AUTO.fridge = !saved.fridge || saved.fridge === '5'; AUTO.ball = !saved.ball || saved.ball === '280'; AUTO.salt = !saved.salt || saved.salt === '0.035';
@@ -1199,7 +1196,7 @@ const ENGINE = (() => {
     try { localStorage.setItem(KEY, JSON.stringify({
       pizzas: state.pizzas, eatNow: state.eatNow, bakeAt: $('#bakeAt').value, restAt: $('#restAt').value,
       hyd: document.querySelector('input[name=hyd]:checked').value, temp: $('#temp').value, fridge: $('#fridge').value,
-      ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, preferCold: $('#preferCold').value, auto: AUTO })); } catch(e) {}
+      ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, auto: AUTO })); } catch(e) {}
   }
 
   /* ---------------- form widgets ---------------- */
@@ -1267,11 +1264,10 @@ const ENGINE = (() => {
     const y = { idy:'instant yeast', ady:'active dry yeast', fresh:'fresh yeast' }[$('#yeastType').value];
     const parts = [`${$('#fridge').value || 5}°C fridge${AUTO.fridge ? ' (auto)' : ''}`, `${$('#ball').value || 280} g balls${AUTO.ball ? ' (auto)' : ''}`, `${Math.round((+$('#salt').value||0.035)*1000)/10}% salt${AUTO.salt ? ' (auto)' : ''}`, y, AUTO.sleep ? 'sleep: don\'t care' : `asleep ${$('#sleepFrom').value}–${$('#wakeAt').value}`];
     if ($('#nightTemp').value !== '') parts.push(`${$('#nightTemp').value}°C at night${AUTO.night ? ' (forecast)' : ''}`); else parts.push('night auto');
-    if ($('#preferCold').value === '1') parts.push('cold balls preferred');
     if ($('#nowAt').value) parts.push('custom "now"');
     $('#tuneSum').textContent = parts.join(' · ');
   }
-  ['#bakeAt','#restAt','#fridge','#ball','#yeastType','#nowAt','#nightTemp','#sleepFrom','#wakeAt','#salt','#preferCold'].forEach(s => $(s).addEventListener('change', () => { renderSteppers(); tuneSummary(); save(); compute(); }));
+  ['#bakeAt','#restAt','#fridge','#ball','#yeastType','#nowAt','#nightTemp','#sleepFrom','#wakeAt','#salt'].forEach(s => $(s).addEventListener('change', () => { renderSteppers(); tuneSummary(); save(); compute(); }));
   $$('input[name=hyd]').forEach(r => r.addEventListener('change', () => { save(); compute(); }));
   $('#go').addEventListener('click', () => { compute(); showView('schedule'); });
 
@@ -1286,7 +1282,7 @@ const ENGINE = (() => {
     return { now, bake, rest, pizzas: state.pizzas, eatNow: state.eatNow, hydration: +document.querySelector('input[name=hyd]:checked').value,
       temp: +$('#temp').value, fridge: +$('#fridge').value || 5, ball: +$('#ball').value || 280, yeastType: $('#yeastType').value, nightTemp: nt,
       sleepFrom: AUTO.sleep ? 0 : toMin($('#sleepFrom').value, 23.5*60), wakeAt: AUTO.sleep ? 0 : toMin($('#wakeAt').value, 7.5*60),
-      salt: AUTO.salt ? +autoSalt() : (+$('#salt').value || 0.035), preferCold: $('#preferCold').value === '1', hourly: state.hourly || null };
+      salt: AUTO.salt ? +autoSalt() : (+$('#salt').value || 0.035), preferCold: false, hourly: state.hourly || null };
   }
   const nowRef = () => (fromLocalInput($('#nowAt').value) || new Date()).getTime();
   function compute() {
@@ -1497,6 +1493,8 @@ const ENGINE = (() => {
   const EXPLAIN = [
     { q:'What is a poolish and why bother?', a:`<p>A poolish is a small starter dough: equal weights of water and flour with a pinch of yeast, left to ferment on its own before the real dough is mixed. Roughly a quarter of the flour gets a head start.</p><p>It gives the yeast time to build flavour and softens the gluten so the dough stretches easily. It is the fastest way to a pizzeria-level, slightly sweet, complex crust with weak flour like maida.</p>` },
     { q:'What does hydration actually mean?', a:`<p>Hydration is the water as a percentage of the flour, by weight. 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven and a lighter, airier, crisper crust, but the dough is stickier and tears more easily. Weak maida cannot hold as much water as Italian 00, so 62–65% is the sweet spot here and 70% is expert mode.</p>` },
+    { q:'Cold-fermented balls: always, or only sometimes?', a:`<p>Only when it is worth it, and the app decides. The poolish is the flavour engine and it always spends the night in the fridge. The balls join it only when there is more lead time than the poolish can absorb (about 30 hours or more, depending on the kitchen), when the kitchen is 31°C or hotter, or when the room-temperature plan would wake you up for a step.</p><p>Below that, say 16 hours, cold balls would get too few hours to add flavour and would still need 2.5–4 hours to warm through before stretching. Cold dough tears and blisters in a 500°C oven. Overnight poolish plus room-proofed balls is the better dough there, not a compromise.</p><p>Weak flour also has a hard ceiling: about 30 hours total in the fridge at 5°C, less in a warmer fridge. Past that the gluten starts to go slack, so the app never stretches a cold hold to fill time.</p>` },
+    { q:'Why balls in the fridge and not the whole dough?', a:`<p>A 280 g ball is at fridge temperature within about an hour and a half. A 1.5 kg mass takes three times as long and ferments away roughly two warm hours in the middle before it is cold, hours this flour cannot spare. Measured example: balled straight away, dough sits at 4°C for 20 of 24 hours; as a bulk it manages only 5 of 24.</p><p>Balling before the fridge also skips a second balling of cold, weak dough. The bulk-first methods you see online (Forkish, Gemignani, Ooni, Gozney) lean on strong flour and two or three days of fridge time, which maida does not have.</p>` },
     { q:'Room ferment or cold ferment?', a:`<p>Yeast works fast when it is warm and very slowly in the fridge. The fridge is a pause button that still lets flavour develop, so it is used whenever there is more time than the dough needs at room temperature.</p><p>Under about 9 hours: everything at room temperature. Overnight: the poolish sleeps in the fridge. Two days or more: the dough balls sleep in the fridge too. Balls always finish at room temperature so they are soft and puffy for stretching.</p>` },
     { q:'Bulk ferment or ball ferment?', a:`<p>Bulk is the whole dough resting as one mass right after mixing; balls are what you divide it into. Balling builds surface tension so each ball rises evenly and stretches into a round.</p><p>With weak flour the bulk stays short (about 30 minutes) and the time goes into the balls. A long bulk with maida relaxes the gluten too much and the balls go slack.</p>` },
     { q:'How is the yeast amount decided?', a:`<p>Yeast is time and temperature in a jar. Warmer is faster, roughly twice as fast for every 8–10°C. The app converts every wait in your schedule into hours at 25°C, then picks the dose that makes the dough peak exactly at pizza time.</p><p>Longer or hotter means less yeast; shorter or colder means more. Always weigh it on a 0.1 g scale. A level quarter teaspoon of instant yeast is about 0.9 g.</p>` },
@@ -1507,7 +1505,7 @@ const ENGINE = (() => {
   $('#view-learn').innerHTML = `<div class="card"><div class="view-head"><div><h1><span class="n">5</span>Why it's like this</h1><p class="lede">The things that confuse everyone, in plain words. Tap a question.</p></div></div>
     <div class="acc">${EXPLAIN.map(e => `<details><summary>${esc(e.q)}<span class="chev">▾</span></summary><div class="body">${e.a}</div></details>`).join('')}</div>
     <div class="learn-h">Glossary</div>
-    <div class="acc">${['poolish','poke','salt','ddt','fridgeword','bulk','hydration'].map(k => `<details><summary>${esc(INFO[k].t)}<span class="chev">▾</span></summary><div class="body">${INFO[k].b}</div></details>`).join('')}</div></div>`;
+    <div class="acc">${['poolish','poke','salt','cold','ddt','fridgeword','bulk','hydration'].map(k => `<details><summary>${esc(INFO[k].t)}<span class="chev">▾</span></summary><div class="body">${INFO[k].b}</div></details>`).join('')}</div></div>`;
 
   /* ---------------- copy as text ---------------- */
   function planText() {
