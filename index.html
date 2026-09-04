@@ -1138,25 +1138,23 @@ const ENGINE = (() => {
 
   function render(r, inp) {
     const el = $('#results');
-    if (!r.ok) { el.innerHTML = `<div class="card reveal"><div class="warnings">${r.warnings.map(w=>`<div class="warn ${w.level}"><span class="ic">⚠️</span><div>${esc(w.text)}</div></div>`).join('')}</div></div>`; return; }
+    if (!r.ok) { lastPlanKey = null; el.innerHTML = `<div class="card"><div class="warnings">${r.warnings.map(w=>`<div class="warn ${w.level}"><span class="ic">⚠️</span><div>${esc(w.text)}</div></div>`).join('')}</div></div>`; return; }
     const now = inp.now;
-    const all = [...r.steps, ...(r.leftovers?.steps||[])].sort((a,b)=>a.t-b.t);
-    const next = all.find(s => s.t > now) ;
-    const current = [...all].reverse().find(s => s.t <= now && new Date(s.t.getTime()+(s.dur||0)*3600e3) > now);
+    const all = allSteps(r);
+    const animate = lastPlanKey !== r.plan; lastPlanKey = r.plan;
+    const rv = animate ? ' reveal' : '';
+    const openIdx = [...el.querySelectorAll('.explain details')].map(d => d.open);
     const rec = r.recipe, y = r.yeast;
     const yName = {idy:'instant yeast', ady:'active dry yeast', fresh:'fresh yeast'}[inp.yeastType];
     const yFmt = v => v < 1 ? `${(Math.round(v*20)/20).toFixed(2).replace(/0$/,'')} g` : `${Math.round(v*10)/10} g`;
     const wt = rec.waterTemp, pwt = rec.poolishWaterTemp;
     const waterLabel = t => t <= 8 ? 'ice-cold' : t <= 15 ? 'fridge-cold' : t <= 22 ? 'cool' : t <= 28 ? 'room temp' : 'lukewarm';
 
-    let nowHTML;
-    if (current) nowHTML = `<div class="now-kicker">Right now</div><div class="now-title">${current.icon} ${esc(current.title)}</div><div class="now-when">until ${fmtTime(new Date(current.t.getTime()+current.dur*3600e3))}<span class="cd" data-cd="${current.t.getTime()+current.dur*3600e3}"></span></div>${current.detail?`<p class="now-detail">${esc(current.detail)}</p>`:''}`;
-    else if (next) nowHTML = `<div class="now-kicker">Next up</div><div class="now-title">${next.icon} ${esc(next.title)}</div><div class="now-when">${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}<span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-detail">${esc(next.detail)}</p>`:''}`;
-    else nowHTML = `<div class="now-kicker">Done</div><div class="now-title">🍕 Enjoy.</div>`;
+    const nowHTML = nowCardHTML(all, now);
 
     el.innerHTML = `
-      <div class="card now-card reveal">${nowHTML}</div>
-      <div class="card reveal">
+      <div class="card now-card${rv}">${nowHTML}</div>
+      <div class="card${rv}">
         <h2><span class="n">2</span> Your plan</h2>
         <p class="plan-name">${esc(r.planName||r.plan)}</p>
         <p class="plan-why">${esc(r.why)}</p>
@@ -1169,7 +1167,7 @@ const ENGINE = (() => {
         </div>
         ${r.warnings.length?`<div class="warnings" style="margin-top:16px">${r.warnings.map(w=>`<div class="warn ${w.level}"><span class="ic">${w.level==='danger'?'🚨':w.level==='warn'?'⚠️':'💡'}</span><div>${esc(w.text)}</div></div>`).join('')}</div>`:''}
       </div>
-      <div class="card reveal">
+      <div class="card${rv}">
         <h2><span class="n">3</span> The recipe</h2>
         <p class="sub">${inp.pizzas} balls × ${inp.ball} g = ${Math.round(rec.totalDough)} g dough · ${rec.totalFlour} g flour total (80% maida, 20% fine chakki atta) · stretch to ${rec.diameterCm} cm</p>
         <div class="recipe">
@@ -1196,23 +1194,54 @@ const ENGINE = (() => {
             <p class="foot">Raw hand-crushed tomatoes, drained. Cheese drained 20 min. Basil after the bake.</p></div>
         </div>
       </div>
-      <div class="card reveal">
+      <div class="card${rv}">
         <h2><span class="n">4</span> The timeline</h2>
         <p class="sub">Every time is on your clock. Waits marked in blue happen in the fridge.</p>
         <ol class="tl">${r.steps.map(s=>stepHTML(s, now)).join('')}</ol>
         ${r.leftovers ? `<div class="tl-split">${r.leftovers.mode==='freezer'?'❄️':'🧊'} The ${r.leftovers.count} leftover ball${r.leftovers.count>1?'s':''}</div><p class="plan-why">${esc(r.leftovers.note)}</p>${r.leftovers.steps?.length?`<ol class="tl">${r.leftovers.steps.map(s=>stepHTML(s, now)).join('')}</ol>`:''}`:''}
       </div>
-      <div class="card explain reveal">
+      <div class="card explain${rv}">
         <h2><span class="n">5</span> Why it's like this</h2>
         <p class="sub">The five things that confuse everyone, in plain words.</p>
         ${EXPLAIN.map(e=>`<details><summary>${e.icon} ${esc(e.q)}</summary><div class="body">${e.a}</div></details>`).join('')}
       </div>`;
 
-    // mark next
-    const nextEl = next && el.querySelector(`.step[data-t="${next.t.getTime()}"]`); if (nextEl) nextEl.classList.add('next');
-    clearInterval(tick); tick = setInterval(() => {
-      el.querySelectorAll('[data-cd]').forEach(c => { const ms = +c.dataset.cd - Date.now(); c.textContent = ms <= 0 ? 'now' : 'in ' + ENGINE.fmtH(ms/3600e3); });
-    }, 1000); el.querySelectorAll('[data-cd]').forEach(c => { const ms = +c.dataset.cd - Date.now(); c.textContent = ms <= 0 ? 'now' : 'in ' + ENGINE.fmtH(ms/3600e3); });
+    el.querySelectorAll('.explain details').forEach((d, i) => { if (openIdx[i]) d.open = true; });
+    markSteps(all, now);
+    clearInterval(tick); tick = setInterval(updateCountdowns, 1000);
+  }
+
+  // ---- time-dependent bits, updated in place (no re-render, no animation) ----
+  let lastPlanKey = null;
+  const allSteps = r => [...r.steps, ...(r.leftovers?.steps||[])].sort((a,b)=>a.t-b.t);
+  function nowState(all, now) {
+    const next = all.find(s => s.t > now);
+    const current = [...all].reverse().find(s => s.t <= now && new Date(s.t.getTime()+(s.dur||0)*3600e3) > now);
+    return { next, current };
+  }
+  function nowCardHTML(all, now) {
+    const { next, current } = nowState(all, now);
+    if (current) return `<div class="now-kicker">Right now</div><div class="now-title">${current.icon} ${esc(current.title)}</div><div class="now-when">until ${fmtTime(new Date(current.t.getTime()+current.dur*3600e3))}<span class="cd" data-cd="${current.t.getTime()+current.dur*3600e3}"></span></div>${current.detail?`<p class="now-detail">${esc(current.detail)}</p>`:''}`;
+    if (next) return `<div class="now-kicker">Next up</div><div class="now-title">${next.icon} ${esc(next.title)}</div><div class="now-when">${esc(dayLabel(next.t, now))} ${fmtTime(next.t)}<span class="cd" data-cd="${next.t.getTime()}"></span></div>${next.detail?`<p class="now-detail">${esc(next.detail)}</p>`:''}`;
+    return `<div class="now-kicker">Done</div><div class="now-title">🍕 Enjoy.</div>`;
+  }
+  function updateCountdowns() {
+    document.querySelectorAll('#results [data-cd]').forEach(c => { const ms = +c.dataset.cd - Date.now(); c.textContent = ms <= 0 ? 'now' : 'in ' + ENGINE.fmtH(ms/3600e3); });
+  }
+  function markSteps(all, now) {
+    const { next } = nowState(all, now); const nt = next ? next.t.getTime() : -1, ms = now.getTime();
+    document.querySelectorAll('#results .step').forEach(s => {
+      const t = +s.dataset.t, end = +s.dataset.end;
+      s.classList.toggle('done', end <= ms && (end > t || t <= ms));
+      s.classList.toggle('next', t === nt);
+    });
+    updateCountdowns();
+  }
+  function refreshNow() {
+    if (!last?.ok || $('#nowAt').value) return;
+    const now = new Date(), all = allSteps(last);
+    const card = $('#results .now-card'); if (card) card.innerHTML = nowCardHTML(all, now);
+    markSteps(all, now);
   }
 
   const EXPLAIN = [
@@ -1306,8 +1335,8 @@ const ENGINE = (() => {
   });
 
   renderSteppers(); renderTemp(); compute(); loadWeather(); initCoach();
-  // re-evaluate "now" markers every minute
-  setInterval(() => { if (!$('#nowAt').value) compute(); }, 60000);
+  // update the "right now" card and step markers in place every 30 s (no re-render)
+  setInterval(refreshNow, 30000);
 })();
 </script>
 </body>
