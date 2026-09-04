@@ -157,9 +157,19 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .tune summary::-webkit-details-marker{display:none}
 .tune summary>span:first-child{color:var(--ink)}
 .tune-sum{flex:1;font-weight:700;font-size:13px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tune-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;padding:14px 0 6px}
-@media (max-width:719px){.tune-grid{grid-template-columns:1fr}}
+.tune-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 22px;padding:14px 0 6px}
+.tune-grid .f{min-width:0}
+.f label{flex-wrap:wrap}
+@media (max-width:719px){.tune-grid{grid-template-columns:minmax(0,1fr)}}
 .f label{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;margin-bottom:7px}
+.tune-lede{grid-column:1/-1;margin:0 0 -4px;font-size:14px;font-weight:700;color:var(--ink-soft)}
+.auto{margin-left:auto;font:900 12px var(--fb);cursor:pointer;background:var(--flour);border:2.5px solid var(--ink);border-radius:999px;padding:4px 11px;box-shadow:1.5px 2px 0 var(--ink);color:var(--ink-soft);transition:transform .1s,box-shadow .1s,background .15s;flex:none;letter-spacing:.3px}
+.auto::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dough-2);border:2px solid var(--ink);margin-right:6px;vertical-align:1px}
+.auto.on{background:var(--basil);color:#fff;transform:translate(1.5px,2px);box-shadow:0 0 0 var(--ink)}
+.auto.on::before{background:var(--cheese)}
+.f.is-auto .inp{opacity:.55;background:var(--paper)}
+.f .auto-note{min-height:0;margin-top:6px}
+.f .auto-note:empty{display:none}
 .f .row{display:flex;gap:10px;align-items:center}
 .f .row span{color:var(--ink-soft);font-weight:800}
 .chev{margin-left:auto;font-family:var(--fd);font-size:20px;line-height:1;transition:transform .2s;flex:none;display:inline-block;color:var(--ink)}
@@ -505,18 +515,19 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
   <details class="tune" id="tune">
     <summary><span>Fine-tune</span><span class="tune-sum" id="tuneSum"></span><span class="chev">▾</span></summary>
     <div class="tune-grid">
-      <div class="f"><label for="fridge">Fridge temperature <button class="info" data-info="fridge" aria-label="About the fridge">i</button></label><input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5"></div>
-      <div class="f"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"></div>
-      <div class="f"><label for="salt">Salt <button class="info" data-info="salt" aria-label="About salt">i</button></label>
-        <select class="inp" id="salt"><option value="0.035" selected>3.5% — saltier, firmer (validated)</option><option value="0.030">3.0% — classic Neapolitan</option></select></div>
+      <p class="tune-lede">Leave anything on <b>Auto</b> and the app assumes a sensible value. Switch it off only for what you actually know.</p>
+      <div class="f" data-auto="fridge"><label for="fridge">Fridge temperature <button class="info" data-info="fridge" aria-label="About the fridge">i</button><button type="button" class="auto" data-auto-for="fridge">Auto</button></label><input class="inp" type="number" id="fridge" value="5" min="0" max="12" step="0.5"><div class="note auto-note"></div></div>
+      <div class="f" data-auto="ball"><label for="ball">Ball weight (g) <button class="info" data-info="ball" aria-label="About ball weight">i</button><button type="button" class="auto" data-auto-for="ball">Auto</button></label><input class="inp" type="number" id="ball" value="280" min="200" max="320" step="10"><div class="note auto-note"></div></div>
+      <div class="f" data-auto="salt"><label for="salt">Salt <button class="info" data-info="salt" aria-label="About salt">i</button><button type="button" class="auto" data-auto-for="salt">Auto</button></label>
+        <select class="inp" id="salt"><option value="0.035" selected>3.5% — validated, firmer</option><option value="0.030">3.0% — classic Neapolitan</option></select><div class="note auto-note"></div></div>
       <div class="f"><label for="preferCold">Cold-ferment the balls <button class="info" data-info="cold" aria-label="About cold fermenting">i</button></label>
         <select class="inp" id="preferCold"><option value="0" selected>Let the app decide</option><option value="1">Whenever possible</option></select></div>
       <div class="f"><label for="yeastType">Yeast <button class="info" data-info="yeastType" aria-label="About yeast types">i</button></label>
         <select class="inp" id="yeastType"><option value="idy" selected>Instant dry (Saf-Instant)</option><option value="ady">Active dry (bloomed)</option><option value="fresh">Fresh (khameer)</option></select></div>
-      <div class="f"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button></label><input class="inp" type="datetime-local" id="nowAt"></div>
-      <div class="f"><label>Asleep between <button class="info" data-info="sleep" aria-label="About sleep hours">i</button></label>
-        <div class="row"><input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from"><span>and</span><input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at"></div></div>
-      <div class="f"><label for="nightTemp">Night temperature (°C) <button class="info" data-info="night" aria-label="About night temperature">i</button></label><input class="inp" type="number" id="nightTemp" placeholder="same as day" min="5" max="40" step="1"></div>
+      <div class="f" data-auto="now"><label for="nowAt">Pretend "now" is <button class="info" data-info="now" aria-label="About the now override">i</button><button type="button" class="auto" data-auto-for="now">Auto</button></label><input class="inp" type="datetime-local" id="nowAt"><div class="note auto-note"></div></div>
+      <div class="f" data-auto="sleep"><label>Asleep between <button class="info" data-info="sleep" aria-label="About sleep hours">i</button><button type="button" class="auto" data-auto-for="sleep">Don't care</button></label>
+        <div class="row"><input class="inp" type="time" id="sleepFrom" value="23:30" aria-label="Asleep from"><span>and</span><input class="inp" type="time" id="wakeAt" value="07:30" aria-label="Awake at"></div><div class="note auto-note"></div></div>
+      <div class="f" data-auto="night"><label for="nightTemp">Night temperature (°C) <button class="info" data-info="night" aria-label="About night temperature">i</button><button type="button" class="auto" data-auto-for="night">Auto</button></label><input class="inp" type="number" id="nightTemp" placeholder="auto" min="5" max="40" step="1"><div class="note auto-note"></div></div>
     </div>
   </details>
  </div>
@@ -1114,7 +1125,7 @@ const ENGINE = (() => {
     cold: { t: 'Cold-fermenting the balls', b: `<p>The balls spend a day or more in the fridge and finish at room temperature. More flavour and a more open crumb, but more steps and roughly 30 hours of lead time. The app switches to it on its own for long leads and for kitchens at 31°C and above.</p>` },
     yeastType: { t: 'Yeast', b: `<p>Amounts are converted automatically: fresh yeast is about three times the weight of instant, active dry a little more than instant and it must be bloomed in the water first. Weigh yeast on a 0.1 g scale. A level quarter teaspoon of instant is roughly 0.9 g.</p>` },
     now: { t: 'Pretend "now"', b: `<p>Plan ahead by pretending it is a different time. Leave it blank and the app uses the real clock, refreshing the "right now" card every 30 seconds.</p>` },
-    sleep: { t: 'Sleep hours', b: `<p>No hands-on step is scheduled while you sleep. The fridge absorbs the difference. If a schedule cannot avoid it, the plan says how much later to bake instead.</p>` },
+    sleep: { t: 'Sleep hours', b: `<p>No hands-on step is scheduled while you sleep. The fridge absorbs the difference. If a schedule cannot avoid it, the plan says how much later to bake instead.</p><p>"Don't care" removes the window: the plan is then free to put a step at any hour, which can shorten the schedule.</p>` },
     night: { t: 'Night temperature', b: `<p>Optional. If the kitchen cools at night, waits that fall between 22:00 and 07:00 are timed at this temperature. The forecast fills this in for you.</p>` },
     poolish: { t: 'Poolish', b: `<p>A small starter: equal weights of water and flour with a pinch of yeast, fermented on its own before the real dough is mixed. About a quarter of the flour gets this head start.</p><p>It builds flavour and softens the gluten so the dough stretches easily. With weak flour it is the fastest route to a pizzeria-level crust.</p>` },
     poke: { t: 'The poke test', b: `<p>Press a floured finger gently into a ball. Springs back slowly and only halfway: ready. Springs back fast: wait. The dent stays: over-proofed, still usable if you handle it gently, or re-ball it and give it 45 minutes.</p><p>It always beats the clock.</p>` },
@@ -1156,6 +1167,7 @@ const ENGINE = (() => {
 
   /* ---------------- state ---------------- */
   const state = { pizzas:4, eatNow:4 };
+  const AUTO = { fridge: true, ball: true, salt: true, now: true, sleep: true, night: true };
   const KEY = 'dough-oclock-v1';
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -1174,6 +1186,11 @@ const ENGINE = (() => {
       if (saved.wakeAt) $('#wakeAt').value = saved.wakeAt;
       if (saved.salt) $('#salt').value = saved.salt;
       if (saved.preferCold) $('#preferCold').value = saved.preferCold;
+      if (saved.auto) Object.assign(AUTO, saved.auto);
+      else { // older save without Auto flags: keep whatever they had, treat untouched defaults as Auto
+        AUTO.fridge = !saved.fridge || saved.fridge === '5'; AUTO.ball = !saved.ball || saved.ball === '280'; AUTO.salt = !saved.salt || saved.salt === '0.035';
+        AUTO.night = !saved.nightTemp; AUTO.now = true; AUTO.sleep = !saved.sleepFrom;
+      }
     }
   } catch(e) {}
   if (!$('#bakeAt').value) { const d = new Date(); d.setDate(d.getDate()+1); d.setHours(20,0,0,0); $('#bakeAt').value = toLocalInput(d); }
@@ -1182,7 +1199,7 @@ const ENGINE = (() => {
     try { localStorage.setItem(KEY, JSON.stringify({
       pizzas: state.pizzas, eatNow: state.eatNow, bakeAt: $('#bakeAt').value, restAt: $('#restAt').value,
       hyd: document.querySelector('input[name=hyd]:checked').value, temp: $('#temp').value, fridge: $('#fridge').value,
-      ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, preferCold: $('#preferCold').value })); } catch(e) {}
+      ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, preferCold: $('#preferCold').value, auto: AUTO })); } catch(e) {}
   }
 
   /* ---------------- form widgets ---------------- */
@@ -1229,10 +1246,27 @@ const ENGINE = (() => {
   $('#temp').addEventListener('input', () => { renderTemp(); });
   $('#temp').addEventListener('change', () => { dropForecast(); save(); compute(); });
 
+  const leadNow = () => { const b = fromLocalInput($('#bakeAt').value), n = fromLocalInput($('#nowAt').value) || new Date(); return b ? (b - n) / 3600e3 : null; };
+  const autoSalt = () => { const L = leadNow(); return L != null && L < 6 ? '0.030' : '0.035'; };
+  function applyAuto() {
+    const set = (k, on) => { const f = document.querySelector(`.f[data-auto="${k}"]`); if (!f) return; f.classList.toggle('is-auto', on); f.querySelector('.auto').classList.toggle('on', on); f.querySelectorAll('.inp').forEach(i => { i.disabled = on; }); return f.querySelector('.auto-note'); };
+    let n;
+    n = set('fridge', AUTO.fridge); if (AUTO.fridge) $('#fridge').value = 5; n.textContent = AUTO.fridge ? 'Assuming 5°C, a typical home fridge. Measure yours for tighter cold holds.' : '';
+    n = set('ball', AUTO.ball); if (AUTO.ball) $('#ball').value = 280; n.textContent = AUTO.ball ? 'Assuming 280 g, which stretches to about 31 cm.' : '';
+    n = set('salt', AUTO.salt); if (AUTO.salt) $('#salt').value = autoSalt(); n.textContent = AUTO.salt ? ($('#salt').value === '0.030' ? 'Using 3%: this dough must be ready within 6 hours, and salt slows the yeast.' : 'Using 3.5%, the validated level for maida. Drops to 3% for a rushed same-day dough.') : '';
+    n = set('now', AUTO.now); if (AUTO.now) $('#nowAt').value = ''; n.textContent = AUTO.now ? 'Real clock.' : '';
+    n = set('sleep', AUTO.sleep); n.textContent = AUTO.sleep ? 'No sleep window: a hands-on step may land at any hour.' : 'No hands-on step is scheduled between these times.';
+    n = set('night', AUTO.night); if (AUTO.night) $('#nightTemp').value = (state.hourly && wx) ? wx.night : '';
+    n.textContent = AUTO.night ? ((state.hourly && wx) ? `From the forecast: about ${wx.night}°C at night.` : 'Assuming about 4° cooler than the day once the kitchen is above 24°C. Apply the forecast for the real curve.') : '';
+  }
+  $$('.auto').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.autoFor; AUTO[k] = !AUTO[k]; applyAuto(); tuneSummary(); save(); compute();
+    if (!AUTO[k]) { const f = b.closest('.f').querySelector('.inp'); if (f) f.focus(); }
+  }));
   function tuneSummary() {
     const y = { idy:'instant yeast', ady:'active dry yeast', fresh:'fresh yeast' }[$('#yeastType').value];
-    const parts = [`${$('#fridge').value || 5}°C fridge`, `${$('#ball').value || 280} g balls`, `${Math.round((+$('#salt').value||0.035)*1000)/10}% salt`, y, `asleep ${$('#sleepFrom').value}–${$('#wakeAt').value}`];
-    if ($('#nightTemp').value !== '') parts.push(`${$('#nightTemp').value}°C at night`);
+    const parts = [`${$('#fridge').value || 5}°C fridge${AUTO.fridge ? ' (auto)' : ''}`, `${$('#ball').value || 280} g balls${AUTO.ball ? ' (auto)' : ''}`, `${Math.round((+$('#salt').value||0.035)*1000)/10}% salt${AUTO.salt ? ' (auto)' : ''}`, y, AUTO.sleep ? 'sleep: don\'t care' : `asleep ${$('#sleepFrom').value}–${$('#wakeAt').value}`];
+    if ($('#nightTemp').value !== '') parts.push(`${$('#nightTemp').value}°C at night${AUTO.night ? ' (forecast)' : ''}`); else parts.push('night auto');
     if ($('#preferCold').value === '1') parts.push('cold balls preferred');
     if ($('#nowAt').value) parts.push('custom "now"');
     $('#tuneSum').textContent = parts.join(' · ');
@@ -1251,11 +1285,12 @@ const ENGINE = (() => {
     const nt = $('#nightTemp').value === '' ? null : +$('#nightTemp').value;
     return { now, bake, rest, pizzas: state.pizzas, eatNow: state.eatNow, hydration: +document.querySelector('input[name=hyd]:checked').value,
       temp: +$('#temp').value, fridge: +$('#fridge').value || 5, ball: +$('#ball').value || 280, yeastType: $('#yeastType').value, nightTemp: nt,
-      sleepFrom: toMin($('#sleepFrom').value, 23.5*60), wakeAt: toMin($('#wakeAt').value, 7.5*60),
-      salt: +$('#salt').value || 0.035, preferCold: $('#preferCold').value === '1', hourly: state.hourly || null };
+      sleepFrom: AUTO.sleep ? 0 : toMin($('#sleepFrom').value, 23.5*60), wakeAt: AUTO.sleep ? 0 : toMin($('#wakeAt').value, 7.5*60),
+      salt: AUTO.salt ? +autoSalt() : (+$('#salt').value || 0.035), preferCold: $('#preferCold').value === '1', hourly: state.hourly || null };
   }
   const nowRef = () => (fromLocalInput($('#nowAt').value) || new Date()).getTime();
   function compute() {
+    if (AUTO.salt) { const v = autoSalt(); if ($('#salt').value !== v) { $('#salt').value = v; applyAuto(); tuneSummary(); } }
     const inp = readInputs();
     const lead = inp.bake ? (inp.bake - inp.now)/3600e3 : null;
     $('#leadHint').textContent = lead == null ? '' : lead < 0 ? 'That is in the past.' : `${ENGINE.fmtH(lead)} from now.`;
@@ -1530,12 +1565,12 @@ const ENGINE = (() => {
   }
   function applyWeather() {
     if (!wx) return;
-    $('#temp').value = Math.max(8, Math.min(42, wx.room)); $('#nightTemp').value = wx.night;
-    state.hourly = wx.hourly; renderTemp(); tuneSummary(); $('#wxApply').classList.add('on'); $('#wxApply').textContent = 'Forecast in use';
+    $('#temp').value = Math.max(8, Math.min(42, wx.room)); if (!AUTO.night) $('#nightTemp').value = wx.night;
+    state.hourly = wx.hourly; renderTemp(); applyAuto(); tuneSummary(); $('#wxApply').classList.add('on'); $('#wxApply').textContent = 'Forecast in use';
     save(); compute();
   }
   $('#wxApply').addEventListener('click', applyWeather);
-  function dropForecast() { if (state.hourly) { state.hourly = null; $('#wxApply').classList.remove('on'); $('#wxApply').textContent = 'Use forecast'; } }
+  function dropForecast() { if (state.hourly) { state.hourly = null; $('#wxApply').classList.remove('on'); $('#wxApply').textContent = 'Use forecast'; applyAuto(); tuneSummary(); } }
 
   /* ---------------- dough coach (hosted API; hidden when not available) ---------------- */
   const chat = [];
@@ -1572,7 +1607,7 @@ const ENGINE = (() => {
   $('#chatInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#chatForm').requestSubmit(); } });
 
   /* ---------------- boot ---------------- */
-  renderSteppers(); renderTemp(); tuneSummary(); compute(); loadWeather(); initCoach();
+  applyAuto(); renderSteppers(); renderTemp(); tuneSummary(); compute(); loadWeather(); initCoach();
   const landing = () => { const h = location.hash.slice(1); if (h) return h; let seen = false; try { seen = !!localStorage.getItem(KEY); } catch (e) {} return seen && last?.ok ? 'schedule' : 'plan'; };
   showView(landing(), { hash: false });
   setInterval(refreshNow, 30000);
