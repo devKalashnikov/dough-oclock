@@ -2,12 +2,14 @@
   "name": "dough-oclock",
   "version": "1.0.0",
   "private": true,
-  "description": "Deterministic Neapolitan dough scheduler for maida + a 500°C gas oven, with an optional Claude-powered dough coach.",
+  "description": "Deterministic Neapolitan dough scheduler for maida + a 500\u00b0C gas oven, with an optional Claude-powered dough coach.",
   "scripts": {
-    "build": "node build.mjs",
-    "test": "node test/run-engine.mjs"
+    "test": "node test/run-engine.mjs",
+    "build:local": "node build.mjs"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.123.0"
   }
