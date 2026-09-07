@@ -27,7 +27,7 @@ dough "forms the structure". Question 2: is ice better than cold water?
 
 ## Conclusions
 
-1. **Speed 2 is the kneading speed on a KitchenAid-class mixer; speed 1 only stirs.** The old text "speed 1–2" read as
+1. **Kneading speed is a behaviour, not a dial number.** On a KitchenAid it is speed 2 and speed 1 only stirs; on Dawood's mixer (tested 2026-09-07) speed 2 barely moved the dough and it only gathered from the walls at 5–6. The test: the lowest setting where the hook pushes the dough round the bowl and it gathers within a minute. The old text "speed 1–2" read as
    speed 1, which on a planetary mixer needs 17–25 min to build any structure. Everyone Dawood sees speeding up
    is on a spiral mixer (~200 rpm on its second speed) or a commercial planetary; a KitchenAid's speed 1 already
    turns faster than a spiral's second speed, and its gearbox, not the dough, is why the maker caps it at speed 2.

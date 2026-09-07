@@ -116,8 +116,10 @@ the app says by how much to move the bake, or to proof in a warmer spot.
 A batch mixed "speed 1–2, poolish + 80 % of the water from the start" stayed liquid and never gathered on the
 hook. The method the app now teaches (sources in `mixing-and-kneading.md`):
 
-* **Speed 2 is the kneading speed on a home planetary mixer; speed 1 only stirs.** KitchenAid caps dough at speed 2
-  for the gearbox, and a KitchenAid's speed 1 already exceeds a spiral mixer's second speed. Every "high speed in
+* **Kneading speed is defined by behaviour, not by the dial.** It is the lowest setting where the hook drags the
+  dough round the bowl and it gathers within a minute: speed 2 on a KitchenAid (whose maker caps dough there for the
+  gearbox, and whose speed 1 already exceeds a spiral mixer's second speed), **speed 5–6 on Dawood's mixer**
+  (observed 2026-09-07: speed 2 only stirred and the dough stayed soup). Every "high speed in
   the middle" method (Vito, Lehmann's planetary advice, the WPC Hobart recipe) is a spiral or commercial mixer;
   on a KitchenAid the equivalent is speed 2 for 6–10 min. Low speed only needs 17–25 min to reach smooth (Lehmann).
 * **Weak flour needs a stiff first mix.** Start with the poolish + half the final water (≈ 45–50 % total hydration),

@@ -104,16 +104,16 @@ Revised after a batch that stayed liquid and never gathered on the hook. Root ca
 
 1. **Water first.** Half of the water into the bowl (190 ml at 65%). Dissolve the 35 g salt in the other half and keep it aside.
 2. Add all the poolish, then both flours on top.
-3. Dough hook. **Speed 1 for 2–3 min**, only until no dry flour is left: a rough, tight ball (about 45–50% hydration at this point), not a batter.
+3. Dough hook. **Lowest speed for 2–3 min**, only until no dry flour is left: a rough, tight ball (about 45–50% hydration at this point), not a batter.
 4. **Rest 15–20 min covered.** Maida drinks slowly; this is where it catches up.
-5. **Speed 2 for 6–8 min** — speed 2 is the kneading speed on a KitchenAid-class mixer (its speed 1 already turns faster than a spiral mixer's second speed). Knead until the dough gathers on the hook and pulls clean from the bowl.
-6. **Second water (bassinage):** the salty half in 3–4 small additions on speed 2. Wait until each addition has vanished and the dough gathers on the hook again before the next. 8–10 min. Too fast and it turns to soup.
+5. **Kneading speed for 6–8 min.** On Dawood's mixer that is **speed 5–6** (observed 2026-09-07: speed 2 barely stirs and the dough only gathered from the walls at 5–6). Kneading speed is the lowest setting where the hook pushes the dough round the bowl and it gathers within a minute; a KitchenAid does this on 2. Knead until the dough gathers on the hook and pulls clean from the bowl.
+6. **Second water (bassinage):** the salty half in 3–4 small additions at the same kneading speed. Wait until each addition has vanished and the dough gathers on the hook again before the next. 8–10 min. Too fast and it turns to soup.
 7. Olive oil last, 2 min.
 8. Stop when the dough is smooth and satiny, even if it fails the windowpane: for an overnight or cold-fermented dough, fermentation finishes the gluten. Total under 40 min.
 9. Check: clinging to the hook, bowl clean, tacky not gluey. A hook spinning through sloppy dough that never gathers = too much water too early, or too little dough for the bowl (scrape down, hold water back, 5 more min).
 10. Rest 15–30 minutes covered, then ball at 280 g and proof.
 
-Still true: **never above speed 2** (gearbox limit, not a dough rule), and **never add flour** to fix stickiness.
+The old "never above speed 2" rule was a KitchenAid rule and does not apply to this mixer. Respect the manual's maximum for dough if it states one, and stop if the bowl flexes or the motor labours. Still true: **never add flour** to fix stickiness.
 
 ### THE MOST IMPORTANT TROUBLESHOOTING RULE
 
@@ -494,7 +494,7 @@ Observations from a direct comparison visit:
 | Infrared thermometer gun | **Highest priority purchase.** Daraz, Rs. 1,500–3,000. Measure the floor, not the air. |
 | 0.1g precision scale | Daraz, Rs. 500–1,500. Essential for yeast. |
 | Pizza peel (wood to launch, metal to turn) | CasaKoa, Daraz, Melody Market kitchen shops |
-| Stand mixer | Owned. **Never above speed 2.** If the hook spins through the dough without catching, the bowl is too big for the batch — hand slap-and-fold instead. |
+| Stand mixer | Owned. Kneading speed is **5–6 on this mixer** (speed 2 only stirs; revised 2026-09-07). If the hook spins through the dough without catching at kneading speed, the bowl is too big for the batch or the water went in too early — hold water back, or hand slap-and-fold. |
 | Bench scraper | Daraz / kitchen supply |
 | Proofing trays with lids | Metro, Carrefour, Daraz |
 | Pizza scissors | Esajee's, Daraz (authentic way to cut) |
@@ -544,7 +544,7 @@ Observations from a direct comparison visit:
 - **Pre-cook the bacon and mushrooms** before they touch the pizza.
 - **Olive oil twice** — before the bake and after.
 - **Nothing green goes in the oven.**
-- **Never above mixer speed 2.**
+- **Knead at the speed where the dough gathers (5–6 on this mixer), not at the number a KitchenAid manual says.**
 - **When the dough breaks, rest it — don't knead it, don't flour it.**
 - **Zero sugar in the dough** (it burns at 500°C).
 - **Watch the dough, not the clock** — especially in warm weather.
