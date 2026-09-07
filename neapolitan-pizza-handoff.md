@@ -96,7 +96,16 @@ Rest 20–30 minutes on the counter before mixing into the final dough.
 | Fine pink salt | 35g |
 | Olive oil | 4 tbsp |
 
-Water should be genuinely cold — fridge water, or tap water with ice cubes melted in and any remaining ice removed. In current Islamabad heat this matters more than ever: kneading generates friction heat, and warm dough overproofs fast.
+Water should be genuinely cold **for the final dough** — fridge water, or tap water with ice cubes melted in and any remaining ice removed. In current Islamabad heat this matters more than ever: kneading generates friction heat, and warm dough overproofs fast. This is safe because the yeast in the final dough is already alive inside the poolish.
+
+### Yeast handling — the rule that lost a poolish (revised 2026-09-07)
+
+**Dry yeast (Saf-instant, any IDY or ADY) must never go straight into cold water.** Rehydration works at 37–43 °C; below 20 °C the cell walls recover too slowly, up to half of the cell contents leak out, part of the yeast is killed or crippled and the leaked glutathione makes dough slack. Lesaffre prints it on the Saf-instant pack: "Do not place in direct contact with ice or iced water." A poolish made by whisking the yeast and honey into ~5 °C water sat for 10 hours and did nothing (2026-09-07). Sources: `research/yeast-and-temperature.md`.
+
+- Poolish: suspend the yeast in 30 g of the water at 38 °C (finger-warm, never hot), **water only, no honey**, 10 min. Then the rest of the water at 16–35 °C depending on the kitchen (the app prints it), the honey, the slurry, then the flour. Poolish water is never cold.
+- Emergency (no-poolish) dough and any "extra" yeast the app lists: same warm suspension first; once hydrated, yeast may meet ice water without harm.
+- Fresh yeast (khameer) is the exception: it is already hydrated and can be crumbled into cold water.
+- Cold itself does not kill yeast: below ~10 °C it crawls, in the fridge it idles, frozen it pauses. Heat kills: fermentation stops around 50 °C, cells die above ~55 °C. Never use water above 43 °C on yeast.
 
 ### Stand mixer method (step by step) — revised 2026-09-07
 

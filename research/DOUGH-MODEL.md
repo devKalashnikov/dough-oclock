@@ -134,3 +134,24 @@ hook. The method the app now teaches (sources in `mixing-and-kneading.md`):
 * **Friction factor 17 °C** and the mix step is 36 min in the timeline. Ice: when the water temperature comes out
   below 0 °C, 20 % of the water goes in as crushed ice with the first water and the flour/bowl are chilled; if the
   dough still finishes above 27 °C, finish with stretch-and-folds rather than more mixer time.
+
+
+## Yeast and water temperature (revised 2026-09-07)
+
+A poolish made by whisking instant yeast and honey into ~5 °C water sat 10 h without fermenting. The earlier presets
+(5–9 °C poolish water in warm kitchens) put dry yeast into cold water, which the manufacturer forbids. Sources in
+`yeast-and-temperature.md`.
+
+* **Cold does not kill yeast; cold rehydration does damage dry yeast.** Baker's yeast slows below ~10 °C, idles in the
+  fridge and survives freezing (Saf-instant may be stored frozen). Dry yeast, however, must rehydrate at 37–43 °C:
+  below 20 °C membrane recovery is slow, up to half the soluble cell contents leak (glutathione → slack dough),
+  cells are killed or crippled (Lallemand via PizzaBlab; Lesaffre pack: "no direct contact with ice or iced water";
+  Lehmann: suspend IDY at 95 °F, ADY at 100–105 °F for 10 min, afterwards it may go over ice).
+* **Poolish water** is now computed for a 24–26 °C start from the flour/room temperature and clamped to
+  **16–35 °C** (17 °C at 31 °C room, 20 °C at 28 °C, 28 °C at 22 °C, 35 °C at 14 °C). The yeast is suspended in 30 g
+  of that water at 38 °C, water only, for 10 min, then added with the rest of the water and the honey. Fresh yeast
+  needs none of this.
+* **Final-dough water** stays ice-cold in hot kitchens (friction, DDT); it is safe because the yeast is already
+  alive in the poolish. The emergency direct dough suspends its yeast at 38 °C first; extra final-dough yeast in cold
+  kitchens is suspended the same way.
+* Heat limits: fermentation stops near 50 °C (Lesaffre), cells die above ~55 °C; never put yeast in water above 43 °C.
