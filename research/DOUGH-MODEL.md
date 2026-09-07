@@ -147,10 +147,12 @@ A poolish made by whisking instant yeast and honey into ~5 °C water sat 10 h wi
   below 20 °C membrane recovery is slow, up to half the soluble cell contents leak (glutathione → slack dough),
   cells are killed or crippled (Lallemand via PizzaBlab; Lesaffre pack: "no direct contact with ice or iced water";
   Lehmann: suspend IDY at 95 °F, ADY at 100–105 °F for 10 min, afterwards it may go over ice).
-* **Poolish water** is now computed for a 24–26 °C start from the flour/room temperature and clamped to
-  **16–35 °C** (17 °C at 31 °C room, 20 °C at 28 °C, 28 °C at 22 °C, 35 °C at 14 °C). The yeast is suspended in 30 g
-  of that water at 38 °C, water only, for 10 min, then added with the rest of the water and the honey. Fresh yeast
-  needs none of this.
+* **Poolish water keeps the designed cool temperatures** (8 °C at ≥ 30 °C room, 12 °C at 27–29, 14 °C at 25–26,
+  16 °C at 23–24, room water at 19–22, 25 °C below 19): in warm kitchens the cold water holds the counter phase back
+  (poolish-science R6; validated 8–10 °C). What changed is the yeast's first contact: it is suspended in 30 g of the
+  water at 38 °C, water only, for 10 min, then added with the cold water and the honey (Lehmann: hydrated yeast may
+  meet ice). The warm slurry raises a 330 g poolish by ≈ 4 °C: 18 °C start in a 31 °C kitchen versus 15 °C with
+  all-cold water and 12 °C for the old whisk-it-in-cold method. Fresh yeast needs none of this.
 * **Final-dough water** stays ice-cold in hot kitchens (friction, DDT); it is safe because the yeast is already
   alive in the poolish. The emergency direct dough suspends its yeast at 38 °C first; extra final-dough yeast in cold
   kitchens is suspended the same way.

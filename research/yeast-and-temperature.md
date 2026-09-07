@@ -33,8 +33,12 @@ and what water temperature should a poolish use?
    exactly the forbidden case, in the most sensitive yeast type. It was not the poolish going "dormant" and it was not
    the cold as such; it was cold rehydration.
 4. **What the app now says.** Suspend the yeast in 30 g of the poolish water at 38 °C, water only, 10 minutes. The rest
-   of the poolish water is computed for a 24–26 °C start and is never below 16 °C (17 °C in a 31 °C kitchen, 28 °C at
-   22 °C, 35 °C at 14 °C). Add the honey with the main water, not with the yeast. Fresh yeast skips all of this.
+   of the poolish water keeps the designed cool temperatures (8 °C in a ≥ 30 °C kitchen, 12 °C at 27–29 °C, room water
+   at 19–22 °C, 25 °C below 19 °C): cold main water is what holds the counter phase back in the heat (poolish-science
+   R6, validated 8–10 °C), and hydrated yeast is only slowed by cold. Thermal check for a 330 g poolish with 31 °C
+   flour: all water at 8 °C → 15 °C start; 30 g at 38 °C + 135 g at 8 °C → 18 °C start; the old whisk-in-cold method
+   → 12 °C. The warm slurry does not accelerate the poolish; 10 minutes at 38 °C rehydrates cells, it does not grow
+   them. Add the honey with the main water, not with the yeast. Fresh yeast skips all of this.
 5. **Ice water in the final dough is still correct** when the arithmetic asks for it: the yeast there is already
    alive inside the poolish, and Lehmann's rule applies — once hydrated, yeast may meet ice. The emergency
    (no-poolish) dough and any extra final-dough yeast get the 38 °C suspension first.
