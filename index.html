@@ -148,6 +148,7 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
 .range{-webkit-appearance:none;appearance:none;width:100%;height:18px;border-radius:999px;border:3px solid var(--ink);background:linear-gradient(90deg,var(--ice) 0%,var(--flour) 40%,var(--cheese) 62%,var(--tomato) 100%);box-shadow:var(--shadow-sm);outline:none;margin:10px 0 6px}
 .range::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;border-radius:50%;background:var(--flour);border:3px solid var(--ink);box-shadow:2px 3px 0 var(--ink);cursor:grab}
 .range::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--flour);border:3px solid var(--ink);box-shadow:2px 3px 0 var(--ink);cursor:grab}
+.range.hyd{background:linear-gradient(90deg,var(--dough-2) 0%,var(--flour) 30%,var(--ice) 62%,var(--ice-dark) 100%)}
 .scale{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--ink-soft)}
 .wx{margin-top:12px;background:var(--ice);border:3px solid var(--ink);border-radius:18px;padding:10px 14px;box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
 .wx-text{font-weight:800;font-size:14px;flex:1;min-width:180px}
@@ -550,12 +551,15 @@ select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.
         <div class="q-sub">Water as a share of the flour.</div>
       </div>
       <div class="q-r">
-        <div class="seg" role="radiogroup" aria-label="Hydration">
-          <label><input type="radio" name="hyd" value="60">60%<small>firm</small></label>
-          <label><input type="radio" name="hyd" value="62">62%<small>chewy</small></label>
-          <label><input type="radio" name="hyd" value="65" checked>65%<small>sweet spot</small></label>
-          <label><input type="radio" name="hyd" value="68">68%<small>airy</small></label>
-          <label><input type="radio" name="hyd" value="70">70%<small>expert</small></label>
+        <div class="temp-top"><div class="temp-big"><span id="hydVal">65</span><small>%</small></div><div class="temp-word" id="hydWord"></div></div>
+        <input class="range hyd" type="range" id="hyd" min="50" max="100" step="1" value="65" aria-label="Hydration">
+        <div class="scale"><span>50%</span><span>60% firm</span><span>65% sweet spot</span><span>75% wet</span><span>100%</span></div>
+        <div class="chips">
+          <button type="button" class="chip" data-hyd="60">60% firm</button>
+          <button type="button" class="chip" data-hyd="62">62% chewy</button>
+          <button type="button" class="chip" data-hyd="65">65% sweet spot</button>
+          <button type="button" class="chip" data-hyd="68">68% airy</button>
+          <button type="button" class="chip" data-hyd="70">70% expert</button>
         </div>
       </div>
     </div>
@@ -655,8 +659,8 @@ const ENGINE = (() => {
     scrap: 1.02, pff: 0.25, oil: 0.03, honey: 0.02, saltDefault: 0.035,
     rCold: [[0,.020],[2,.030],[3,.037],[4,.045],[5,.055],[6,.065],[7,.077],[8,.090],[10,.120],[12,.160],[14,.215],[15,.250],[16,.290],[18,.400],[20,.500],[22,.680],[24,.880],[25,1],[26,1.13],[27,1.24],[28,1.35],[29,1.48],[30,1.60],[31,1.68],[32,1.75],[34,1.83],[35,1.85],[36,1.83],[38,1.60],[40,1.20],[42,0.60]],
     tauBall: 1.5, tauBulk: 4.5, D_COMFORT: 10, D_HARD: 14,
-    mixH: 0.5, restBallH: 0.6, stretchH: 0.25, restE: 0.35, ovenH: 35 / 60,
-    FF: 15, craigA: 0.944, craigB: 0.695,
+    mixH: 0.6, restBallH: 0.6, stretchH: 0.25, restE: 0.35, ovenH: 35 / 60,
+    FF: 17, craigA: 0.944, craigB: 0.695,
     yeastFactor: { idy: 1, ady: 1.33, fresh: 3 },
     minLead: 2.35,
   };
@@ -766,8 +770,8 @@ const ENGINE = (() => {
     const raw = plan === 'E' ? 3 * DDT - T - T - K.FF : 4 * DDT - T - T - Tpool - K.FF;
     const wt = clamp(raw, 1, 40);
     const notes = [];
-    if (raw < 1) notes.push('Chill the flour and the mixer bowl 30 min in the fridge, and replace 20% of this water (by weight) with crushed ice.');
-    if (wt < 8) notes.push('Ice water: melt ice into the water, remove the ice before weighing.');
+    if (raw < 1) notes.push('The maths wants water below freezing: replace 20% of it (by weight) with crushed ice added with the first water, and chill the flour and the bowl 30 min in the fridge. Cold flour drinks slower, so expect the first mix to take a few minutes longer.');
+    if (wt < 8) notes.push('Ice water: melt ice into the water, remove the ice before weighing. Measure the dough after mixing; if it lands more than 2°C off target, the friction factor in the maths is not your mixer\'s and the next batch needs colder or warmer water by that difference.');
     else if (wt > 30) notes.push('Lukewarm water (never above 40°C).');
     return { DDT, wt: Math.round(wt), notes };
   }
@@ -860,7 +864,10 @@ const ENGINE = (() => {
     if (Tm >= 31) warnings.push({ level: 'danger', text: `Hot kitchen (${T}°C): the ready window is only ~30 min. If an AC room at 24–27°C exists, enter that temperature instead. Ice water, hydration ≤ 65%, and bake in waves of 4.` });
     else if (Tm >= 28) warnings.push({ level: 'warn', text: `Warm kitchen (${T}°C): the ready window is about 40–45 min. Start poke-testing at the scheduled time and bake at the early side.` });
     if (Tf >= 7) warnings.push({ level: 'warn', text: `Fridge at ${Tf}°C ferments dough about twice as fast as 4°C. Fridge holds are capped shorter (poolish ≤ ${caps.Hp} h, balls ≤ ${caps.Hb} h). Put a thermometer on the dough shelf; the back of the middle shelf is coldest.` });
-    if (inp.hydration > 66) warnings.push({ level: 'warn', text: `${inp.hydration}% is sticky with maida and risks a wet centre in a 60–90 s bake. Handle with oiled hands; 62–65% is the sweet spot for this flour.` });
+    if (inp.hydration >= 80) warnings.push({ level: 'danger', text: `${inp.hydration}% is pan-pizza territory for this flour. A Neapolitan round at 500°C will tear on the peel and stay wet in the middle. Choose 70% or below unless you are making pizza in teglia.` });
+    else if (inp.hydration >= 72) warnings.push({ level: 'warn', text: `${inp.hydration}% is beyond what maida holds on its own: keep at least a quarter of the water back for the second addition, expect a sticky dough and a wetter centre, and finish with slap-and-folds.` });
+    else if (inp.hydration > 66) warnings.push({ level: 'warn', text: `${inp.hydration}% is sticky with maida and risks a wet centre in a 60–90 s bake. Handle with oiled hands; 62–65% is the sweet spot for this flour.` });
+    if (inp.hydration <= 55) warnings.push({ level: 'info', text: `${inp.hydration}% is a stiff dough: dense crumb and hard to open to a full round. Maida is happiest at 60–65%.` });
     if (Tm >= 31 && inp.hydration > 65) warnings.push({ level: 'warn', text: 'Keep hydration at 65% or below in this heat.' });
     if (rec.totalFlour > 1500) warnings.push({ level: 'info', text: `${rec.totalFlour} g of flour: split into two mixer batches and two poolish bowls (never above speed 2, bowl half full).` });
     if (Tm >= 30 && inp.eatNow >= 5) warnings.push({ level: 'info', text: `Wave rule: at ${T}°C proof ${Math.min(4, inp.eatNow)} balls for the first launch and keep the rest in the fridge; pull them 15 min after the first pizza goes in. The ready window is too short for ${inp.eatNow} balls at once.` });
@@ -960,7 +967,7 @@ const ENGINE = (() => {
     steps.push(S(add(best.poolStart, 0.1), '🫧', 'wait', `Poolish wakes up on the counter (${T}°C)`, pre.warm - 0.1));
     steps.push(S(best.poolFridge, '🧊', 'fridge', 'Seal the poolish and refrigerate', best.Hp, `Cling film tight, no holes. It builds flavour slowly at ${Tf}°C for ${fmtH(best.Hp)}.`, 'When it comes out: bubbly, domed or just sinking in the centre, sweet-yeasty with a faint tang. Sunk well below a ring on the bowl and boozy → discard and remake.'));
     if (trw > 0) steps.push(S(poolOut, '🌡️', 'active', 'Poolish out of the fridge', trw, `Let it stand ${Math.round(trw * 60)} min while you weigh everything else.`));
-    steps.push(S(mixStart, '🥣', 'active', `Mix the final dough (target dough temp ${pr.ddt}°C)`, K.mixH, `Flours + poolish + 80% of the water, speed 1 for 3–4 min → rest 10–20 min → salt, 1 min → remaining water in a stream → knead speed 1–2 for 8–10 min → oil, 3 min. Never above speed 2.`, 'Clings to the hook, pulls from the sides. Strandy or breaking? Stop, damp towel 15–20 min, knead 3–5 min. Up to 3 cycles. Never add flour.'));
+    steps.push(S(mixStart, '🥣', 'active', `Mix the final dough (target dough temp ${pr.ddt}°C)`, K.mixH, `Water first: half of the water into the bowl (dissolve the salt in the other half and set it aside), then all the poolish, then the flours. Speed 1 for 2–3 min until no dry flour is left: a rough, tight ball. Cover and rest 15–20 min so the maida drinks. Speed 2 for 6–8 min until it gathers on the hook and pulls clean from the bowl. Second water: the salty half in 3–4 small additions on speed 2, waiting until each has vanished and the dough gathers again (8–10 min). Oil last, 2 min. Stop when smooth and satiny even if it fails the windowpane: fermentation finishes the gluten.`, 'Speed 2 is where a home mixer kneads; speed 1 only stirs. A hook spinning through sloppy dough that never gathers means too much water too early or too little dough for the bowl: hold the second water back, scrape down, give it 5 more min. Strandy or tearing? Stop, cover 15 min, then 3 min on speed 2. Dough above 27°C? Finish with three sets of stretch-and-folds instead. Never add flour.'));
     steps.push(S(add(mixStart, K.mixH), '🥟', 'active', `Rest ${T >= 31 ? 15 : T >= 28 ? 20 : 30} min, then ball at ${inp.ball} g`, K.restBallH, 'Oiled hands and counter, never flour. Smooth top, seam underneath. Oiled tray, 5 cm apart, oiled cling film with no holes.'));
     steps.push(S(proofStart, '⏳', 'wait', `Balls proof at room temperature (${T}°C)`, tbp, `About ${fmtH(tbp)}. The oven goes on ${Math.round(K.ovenH * 60)} min before pizza.`));
     steps.push(S(pokeAt, '👉', 'active', 'Start poke-testing', 0, `Press a floured finger 1 cm in for 2 s. Springs back fast → wait, re-test in ${T >= 28 ? '20' : '30–45'} min. Comes back slowly and only halfway → ready. Ready window: ${fmtT(ready)}–${fmtT(overAt)}.`, 'Ready: ~1.75× volume, balls touching, light and airy. Over-proofed: dent stays, big translucent blisters, boozy smell → stretch now gently, or re-ball once and rest 60 min.'));
@@ -998,7 +1005,7 @@ const ENGINE = (() => {
     if (delay > 0.5) steps.push(S(now, '⏳', 'wait', 'Nothing to do yet', delay, `The poolish starts at ${fmtDT(poolStart)}.`));
     steps.push(S(start, '🥣', 'active', 'Make the same-day poolish', 0.1, `Whisk the yeast into the water, add the maida, mix to a thick batter. Loose cover on the counter for ${fmtH(preS.warm)}. No honey today.`, 'Use it when it has at least doubled, is bubbling all over and the dome is just starting to flatten. If it gets there early, mix early.'));
     steps.push(S(add(start, 0.1), '🫧', 'wait', `Poolish ripens on the counter (${T}°C)`, preS.warm - 0.1));
-    steps.push(S(mixStart, '🥣', 'active', `Mix the final dough (target dough temp ${pr.ddt}°C)`, K.mixH, `Flours + all the poolish + 80% of the water, speed 1 for 3–4 min → rest 10–20 min → salt → remaining water → knead 8–10 min speed 1–2 → oil last. Never above speed 2.`, 'Clings to the hook, pulls from the sides. Strandy? Stop, damp towel 15–20 min, knead 3–5 min. Never add flour.'));
+    steps.push(S(mixStart, '🥣', 'active', `Mix the final dough (target dough temp ${pr.ddt}°C)`, K.mixH, `Water first: half of the water into the bowl (dissolve the salt in the other half and set it aside), then all the poolish, then the flours. Speed 1 for 2–3 min until no dry flour is left: a rough, tight ball. Cover and rest 15–20 min so the maida drinks. Speed 2 for 6–8 min until it gathers on the hook and pulls clean from the bowl. Second water: the salty half in 3–4 small additions on speed 2, waiting until each has vanished and the dough gathers again (8–10 min). Oil last, 2 min. Stop when smooth and satiny even if it fails the windowpane: fermentation finishes the gluten.`, 'Speed 2 is where a home mixer kneads; speed 1 only stirs. A hook spinning through sloppy dough that never gathers means too much water too early or too little dough for the bowl: hold the second water back, scrape down, give it 5 more min. Strandy or tearing? Stop, cover 15 min, then 3 min on speed 2. Dough above 27°C? Finish with three sets of stretch-and-folds instead. Never add flour.'));
     steps.push(S(add(mixStart, K.mixH), '🥟', 'active', `Rest ${T >= 31 ? 15 : T >= 28 ? 20 : 30} min, then ball at ${inp.ball} g`, K.restBallH, 'Oiled hands and counter. Smooth top, seam underneath. Oiled tray, 5 cm apart, oiled cling film.'));
     steps.push(S(proofStart, '⏳', 'wait', `Balls proof at room temperature (${T}°C)`, tbp, `About ${fmtH(tbp)}.`));
     steps.push(S(pokeAt, '👉', 'active', 'Start poke-testing', 0, `Press 1 cm for 2 s. Fast spring-back → wait, re-test in ${T >= 28 ? '20' : '30–45'} min. Slow half return → ready. Ready window: ${fmtT(ready)}–${fmtT(overAt)}.`, 'Over-proofed: dent stays, big blisters, boozy smell → stretch now gently, or re-ball once and rest 60 min.'));
@@ -1023,7 +1030,7 @@ const ENGINE = (() => {
     const finalYeastG = f005(yPct * F / 100);
     const steps = [];
     if (delay > 0.5) steps.push(S(now, '⏳', 'wait', 'Nothing to do yet', delay, `Mix at ${fmtDT(mixStart)} — longer than ${fmtH(tE)} warm would over-proof this flour.`));
-    steps.push(S(mixStart, '🥣', 'active', 'Mix the dough now — no poolish (target dough temp 26°C)', K.mixH, `Dissolve the yeast in 50 g of the water at 32°C first. Flours + water, speed 1 for 3–4 min → rest 10 min → salt → knead 8–10 min → oil last. Hydration capped at 65%.`, 'Tacky and smooth-ish. Strandy? Rest 15 min, knead 5.'));
+    steps.push(S(mixStart, '🥣', 'active', 'Mix the dough now — no poolish (target dough temp 26°C)', K.mixH, `Dissolve the yeast in 50 g of the water at 32°C first. Water first: 80% of the water (salt dissolved in the rest, set aside), the yeast water, then the flours. Speed 1 for 2–3 min to a rough ball, rest 10 min, then speed 2 for 6–8 min until it gathers on the hook. Add the salty water in 2–3 small additions on speed 2, waiting for each to vanish (5 min). Oil last, 2 min. Hydration capped at 65%.`, 'Speed 2 is where a home mixer kneads; speed 1 only stirs. A hook spinning through sloppy dough that never gathers means too much water too early or too little dough for the bowl: hold the second water back, scrape down, give it 5 more min. Strandy or tearing? Stop, cover 15 min, then 3 min on speed 2. Dough above 27°C? Finish with three sets of stretch-and-folds instead. Never add flour.'));
     steps.push(S(add(mixStart, K.mixH), '🥟', 'active', `Rest 15 min, then ball at ${inp.ball} g`, K.restE, 'Oiled hands, smooth top, seam under. Oiled tray, oiled cling film.'));
     steps.push(S(proofStart, '⏳', 'wait', `Balls proof at room temperature (${T}°C)`, tE, `About ${fmtH(tE)}. Poke-test from ${fmtT(add(ready, -0.2 * tE))}.`, 'Slow half return of the dent = ready. This dough has a short window — bake at the early side.'));
     return { plan: 'E', steps, presetG: 0, poolishWater: null, finalYeastG, delayH: delay, sleepViolations: inSleep(mixStart, inp) ? 1 : 0, mixInSleep: inSleep(mixStart, inp),
@@ -1062,7 +1069,7 @@ const ENGINE = (() => {
     steps.push(S(add(best.poolStart, 0.1), '🫧', 'wait', `Poolish wakes up on the counter (${T}°C)`, pre.warm - 0.1));
     steps.push(S(best.poolFridge, '🧊', 'fridge', 'Seal the poolish and refrigerate', best.Hp, `Cling film tight. ${fmtH(best.Hp)} at ${Tf}°C.`, 'Out of the fridge: bubbly, domed or just sinking, sweet-yeasty with a faint tang. Boozy and collapsed → remake.'));
     if (trw > 0) steps.push(S(best.poolOut, '🌡️', 'active', 'Poolish out of the fridge', trw, `${Math.round(trw * 60)} min on the counter while you weigh everything.`));
-    steps.push(S(tp.mixStart, '🥣', 'active', 'Mix the final dough (target dough temp 20°C — it\'s going to the fridge)', K.mixH, `Flours + poolish + 80% of the cold water, speed 1 for 3–4 min → rest 10–20 min → salt → remaining water → knead 8–10 min speed 1–2 → oil last. Never above speed 2.`, 'Clings to the hook, pulls from the sides. Strandy? Stop, damp towel 15–20 min, knead 3–5 min. Never add flour.'));
+    steps.push(S(tp.mixStart, '🥣', 'active', 'Mix the final dough (target dough temp 20°C — it\'s going to the fridge)', K.mixH, `Water first: half of the cold water into the bowl (dissolve the salt in the other half and set it aside), then all the poolish, then the flours. Speed 1 for 2–3 min until no dry flour is left: a rough, tight ball. Cover and rest 15–20 min so the maida drinks. Speed 2 for 6–8 min until it gathers on the hook and pulls clean from the bowl. Second water: the salty half in 3–4 small additions on speed 2, waiting until each has vanished and the dough gathers again (8–10 min). Oil last, 2 min. Stop when smooth and satiny even if it fails the windowpane: fermentation finishes the gluten.`, 'Speed 2 is where a home mixer kneads; speed 1 only stirs. A hook spinning through sloppy dough that never gathers means too much water too early or too little dough for the bowl: hold the second water back, scrape down, give it 5 more min. Strandy or tearing? Stop, cover 15 min, then 3 min on speed 2. Dough above 27°C? Finish with three sets of stretch-and-folds instead. Never add flour.'));
     steps.push(S(add(tp.mixStart, K.mixH), '🥟', 'active', `Rest ${T >= 31 ? 15 : T >= 28 ? 20 : 30} min, then ball at ${inp.ball} g`, K.restBallH, 'Oiled hands, smooth top, seam under. Oiled tray or one ball per 1 L lidded box, oil the tops.'));
     steps.push(S(tp.ballEnd, '⏳', 'wait', 'Balls get a head start on the counter', hhs, `${fmtH(hhs)} at ${T}°C so the yeast is awake before the cold.`));
     steps.push(S(tp.fridgeIn, '🧊', 'fridge', 'Balls into the fridge', best.Hb, `Lid or film ajar for the first 60–90 min (condensation), then sealed. ${fmtH(best.Hb)} at ${Tf}°C.`, 'They slowly puff to ~1.5×. Flattened balls and big surface bubbles after a day are normal. Liquid on the tray or a vinegar smell → the fridge ran warm: bake within 30 min or re-ball.'));
@@ -1186,7 +1193,7 @@ const ENGINE = (() => {
     bake: { t: 'When are you eating?', b: `<p>The time the first pizza goes into the oven. Everything is scheduled backwards from it: the oven lights 45 minutes before, the balls must pass the poke test by then, and the poolish must be ripe before the dough is mixed.</p><p>More lead time means more flavour. Under 5 hours is an emergency straight dough, 5–9 hours gets a same-day poolish, overnight gets a fridge poolish, and two days or more gets cold-fermented balls.</p>` },
     count: { t: 'How many pizzas', b: `<p>Balls you make now, one per pizza. Spare balls are planned separately: they go to the fridge for up to about 30 hours, or into the freezer beyond that.</p><p>Above 1500 g of flour the recipe is split into two mixer batches.</p>` },
     rest: { t: 'The second sitting', b: `<p>Decides what happens to the spare balls. A gap of an hour or two: they proof with the others. Up to about 30 hours: they wait in the fridge un-proofed and come out a few hours before. Longer: they are frozen right after balling, thawed overnight in the fridge, and finished at room temperature.</p>` },
-    hydration: { t: 'Hydration', b: `<p>Water as a percentage of the flour by weight: 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven, so a lighter, airier crust, but the dough is stickier and tears more easily. Maida is a weak flour and cannot hold what Italian 00 holds: 62–65% is the sweet spot here, 70% is expert territory. In a hot kitchen stay at 65% or below.</p>` },
+    hydration: { t: 'Hydration', b: `<p>Water as a percentage of the flour by weight: 1000 g flour and 650 g water is 65%.</p><p>More water means more steam in the oven, so a lighter, airier crust, but the dough is stickier and tears more easily. Maida is a weak flour and cannot hold what Italian 00 holds: 62–65% is the sweet spot, 68–70% is expert territory and needs the second-water technique in the mixer, 75% and up is pan pizza, not a Neapolitan round. In a hot kitchen stay at 65% or below.</p><p>The slider goes to 100% so you can plan any dough; the warnings tell you when you have left what this flour can do.</p>` },
     temp: { t: 'Kitchen temperature', b: `<p>The temperature where the dough will sit, not the outdoor reading. Yeast roughly doubles its pace every 8–10°C, so this number moves every wait in the plan.</p><p>Use the forecast to prefill it and the timeline follows the hourly curve, nights included. Above 31°C the ready window shrinks to about 30 minutes, so an AC room is worth entering instead.</p>` },
     fridge: { t: 'Fridge temperature', b: `<p><b>Auto assumes 5°C.</b> Most home fridges sit at 3–7°C on the dough shelf. A fridge at 8°C ferments dough about twice as fast as one at 4°C, so a cheap fridge thermometer on the middle-back shelf is the best upgrade you can make. Above 7°C every cold hold is shortened.</p>` },
     ball: { t: 'Ball weight', b: `<p><b>Auto assumes 280 g.</b> 280 g stretches to 31–32 cm with a 2–3 mm centre. 250 g gives about 29 cm. Thick 8–9 inch pizzas are usually under-stretched balls, not too little dough.</p>` },
@@ -1245,7 +1252,7 @@ const ENGINE = (() => {
       if (saved.eatNow) state.eatNow = saved.eatNow;
       if (saved.bakeAt) $('#bakeAt').value = saved.bakeAt;
       if (saved.restAt) $('#restAt').value = saved.restAt;
-      if (saved.hyd) { const r = document.querySelector(`input[name=hyd][value="${saved.hyd}"]`); if (r) r.checked = true; }
+      if (saved.hyd) $('#hyd').value = Math.max(50, Math.min(100, +saved.hyd || 65));
       if (saved.temp) $('#temp').value = saved.temp;
       if (saved.fridge) $('#fridge').value = saved.fridge;
       if (saved.ball) $('#ball').value = saved.ball;
@@ -1266,7 +1273,7 @@ const ENGINE = (() => {
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify({
       pizzas: state.pizzas, eatNow: state.eatNow, bakeAt: $('#bakeAt').value, restAt: $('#restAt').value,
-      hyd: document.querySelector('input[name=hyd]:checked').value, temp: $('#temp').value, fridge: $('#fridge').value,
+      hyd: $('#hyd').value, temp: $('#temp').value, fridge: $('#fridge').value,
       ball: $('#ball').value, yeastType: $('#yeastType').value, nightTemp: $('#nightTemp').value, sleepFrom: $('#sleepFrom').value, wakeAt: $('#wakeAt').value, salt: $('#salt').value, auto: AUTO })); } catch(e) {}
   }
 
@@ -1337,7 +1344,14 @@ const ENGINE = (() => {
     $('#tuneSum').textContent = parts.join(' · ');
   }
   ['#bakeAt','#restAt','#fridge','#ball','#yeastType','#nowAt','#nightTemp','#sleepFrom','#wakeAt','#salt'].forEach(s => $(s).addEventListener('change', () => { renderSteppers(); tuneSummary(); save(); compute(); }));
-  $$('input[name=hyd]').forEach(r => r.addEventListener('change', () => { save(); compute(); }));
+  function renderHyd() {
+    const h = +$('#hyd').value; $('#hydVal').textContent = h;
+    $('#hydWord').textContent = h <= 55 ? 'stiff, dense' : h <= 59 ? 'firm, easy to handle' : h <= 63 ? 'chewy, forgiving' : h <= 66 ? 'the sweet spot for maida' : h <= 70 ? 'airy but sticky' : h <= 75 ? 'very wet: second-water technique' : h <= 85 ? 'pan-pizza territory' : 'a batter, not a dough';
+    $$('[data-hyd]').forEach(c => c.classList.toggle('on', +c.dataset.hyd === h));
+  }
+  $('#hyd').addEventListener('input', renderHyd);
+  $('#hyd').addEventListener('change', () => { save(); compute(); });
+  $$('[data-hyd]').forEach(c => c.addEventListener('click', () => { $('#hyd').value = c.dataset.hyd; renderHyd(); save(); compute(); }));
   $('#go').addEventListener('click', () => { compute(); showView('schedule'); });
 
   /* ---------------- compute ---------------- */
@@ -1348,7 +1362,7 @@ const ENGINE = (() => {
     const bake = fromLocalInput($('#bakeAt').value);
     const rest = fromLocalInput($('#restAt').value);
     const nt = $('#nightTemp').value === '' ? null : +$('#nightTemp').value;
-    return { now, bake, rest, pizzas: state.pizzas, eatNow: state.eatNow, hydration: +document.querySelector('input[name=hyd]:checked').value,
+    return { now, bake, rest, pizzas: state.pizzas, eatNow: state.eatNow, hydration: +$('#hyd').value,
       temp: +$('#temp').value, fridge: +$('#fridge').value || 5, ball: +$('#ball').value || 280, yeastType: $('#yeastType').value, nightTemp: nt,
       sleepFrom: AUTO.sleep ? 0 : toMin($('#sleepFrom').value, 23.5*60), wakeAt: AUTO.sleep ? 0 : toMin($('#wakeAt').value, 7.5*60),
       salt: AUTO.salt ? +autoSalt() : (+$('#salt').value || 0.035), preferCold: false, hourly: state.hourly || null };
@@ -1541,7 +1555,7 @@ const ENGINE = (() => {
           ${ing('Extra-virgin olive oil', rec.final.oil, 'g')}
           ${ing(`${yName}${hasPoolish ? ' (extra)' : ''}`, y.finalShown < 0.05 ? 'none' : yFmt(y.finalShown), y.finalShown < 0.05 ? '' : 'g', true)}
           <div class="callout">Target <button class="term" data-info="ddt">dough temperature</button> <b>${wt.DDT}°C</b>, so the water is about <b>${wt.wt}°C</b>. ${esc(wt.notes.join(' '))}</div>
-          <details class="how"><summary>How to mix<span class="chev">▾</span></summary><p>Flours, poolish and about 80% of the water on speed 1 for 3–4 minutes, then rest 10–20 minutes. Add the salt, then the remaining water, and knead 8–10 minutes on speed 1–2. Oil goes in last. Never above speed 2, bowl no more than half full.</p><p>Ready when it clings to the hook and pulls cleanly from the sides. Strandy or tearing? Stop, cover with a damp towel for 15–20 minutes, then knead 3–5 minutes more. Never add flour.</p></details></div>
+          <details class="how"><summary>How to mix<span class="chev">▾</span></summary><p><b>1. First water.</b> Half of the water into the bowl (dissolve the salt in the other half and keep it aside), then all the poolish, then the flours. Speed 1 for 2–3 minutes until no dry flour is left: a rough, tight ball, not a batter.</p><p><b>2. Rest</b> 15–20 minutes, covered. Maida drinks slowly; this is where it catches up.</p><p><b>3. Knead on speed 2</b>, the kneading speed on a home mixer (speed 1 only stirs), 6–8 minutes until the dough gathers on the hook and pulls clean from the bowl.</p><p><b>4. Second water.</b> The salty half in 3–4 small additions on speed 2. Wait until each has vanished and the dough gathers on the hook again before the next: 8–10 minutes. Too fast and it turns to soup.</p><p><b>5. Oil last</b>, 2 minutes. Stop when the dough is smooth and satiny even if it fails the windowpane; fermentation finishes the gluten. Under 40 minutes in total.</p><p>Hook spinning through sloppy dough that never gathers: too much water too early or too little dough for the bowl. Hold the second water back, scrape down, give it 5 more minutes. Strandy or tearing: stop, cover 15 minutes, then 3 minutes on speed 2. Never add flour.</p></details></div>
         <div class="rcard"><h3>On the bench<small>per pizza</small></h3>
           ${ing('Sooji + maida dust (50/50)', '~100', 'g')}
           ${ing('Sauce', '50–60', 'g')}
@@ -1559,6 +1573,8 @@ const ENGINE = (() => {
     { q:'Why balls in the fridge and not the whole dough?', a:`<p>A 280 g ball is at fridge temperature within about an hour and a half. A 1.5 kg mass takes three times as long and ferments away roughly two warm hours in the middle before it is cold, hours this flour cannot spare. Measured example: balled straight away, dough sits at 4°C for 20 of 24 hours; as a bulk it manages only 5 of 24.</p><p>Balling before the fridge also skips a second balling of cold, weak dough. The bulk-first methods you see online (Forkish, Gemignani, Ooni, Gozney) lean on strong flour and two or three days of fridge time, which maida does not have.</p>` },
     { q:'Room ferment or cold ferment?', a:`<p>Yeast works fast when it is warm and very slowly in the fridge. The fridge is a pause button that still lets flavour develop, so it is used whenever there is more time than the dough needs at room temperature.</p><p>Under about 9 hours: everything at room temperature. Overnight: the poolish sleeps in the fridge. Two days or more: the dough balls sleep in the fridge too. Balls always finish at room temperature so they are soft and puffy for stretching.</p>` },
     { q:'Bulk ferment or ball ferment?', a:`<p>Bulk is the whole dough resting as one mass right after mixing; balls are what you divide it into. Balling builds surface tension so each ball rises evenly and stretches into a round.</p><p>With weak flour the bulk stays short (about 30 minutes) and the time goes into the balls. A long bulk with maida relaxes the gluten too much and the balls go slack.</p>` },
+    { q:'Kneading in a stand mixer: which speed, and why it went liquid', a:`<p>Every professional you have watched speeding up mid-mix is on a spiral mixer, where the second speed is about 200 rpm. A home planetary mixer already turns faster than that on speed 1, and the manufacturer caps dough at speed 2 because the gearbox, not the dough, is the limit. So on a KitchenAid-type mixer, speed 2 is the kneading speed and speed 1 is only for stirring. Kneading on speed 1 alone takes 20 minutes or more to build any structure; on speed 2 it takes 6–10.</p><p>The other half of a liquid dough is water added too early. Weak flour needs a stiff first mix, roughly 45–50% hydration, to form gluten at all; if the strands are diluted from the start they slide past each other and the hook just spins. That is why the second-water technique (bassinage) exists: build the dough tight, then add the rest of the water in small additions once it clings to the hook. Vito does exactly this at half speed on a spiral; on a home mixer it is the same routine on speed 2.</p><p>A dough for an overnight or cold ferment should not be kneaded to a full windowpane. Smooth and satiny is enough; fermentation finishes the gluten, and over-mixing weak flour breaks it down.</p>` },
+    { q:'Ice water, cold water, or ice in the dough?', a:`<p>The mixer adds heat: a home stand mixer puts 8–16°C into the dough over a knead, about 12–13°C in the first 7 minutes on speed 2 and more the longer it runs. The app back-calculates the water temperature that lands the dough on its target after that heat. In a 30°C kitchen with 30°C flour the answer is usually water near 0°C, so ice water is not a trick, it is the arithmetic.</p><p>When the number comes out below freezing, replace part of the water with crushed ice by weight and chill the flour and bowl. Cold flour drinks more slowly, so the first mix takes a few minutes longer. Ice is not a substitute for a shorter knead: if the dough still comes out above 27°C, finish with stretch-and-folds instead of more mixer time.</p><p>Measure the dough once after mixing. If it is more than 2°C off target, your mixer's friction differs from the assumed 17°C and the next batch needs water colder or warmer by that difference.</p>` },
     { q:'How is the yeast amount decided?', a:`<p>Yeast is time and temperature in a jar. Warmer is faster, roughly twice as fast for every 8–10°C. The app converts every wait in your schedule into hours at 25°C, then picks the dose that makes the dough peak exactly at pizza time.</p><p>Longer or hotter means less yeast; shorter or colder means more. Always weigh it on a 0.1 g scale. A level quarter teaspoon of instant yeast is about 0.9 g.</p>` },
     { q:'How do I know it is ready?', a:`<p>Poolish: doubled, bubbly, domed or just starting to sink in the middle, smells yeasty and a little tangy. Slightly collapsed is peak flavour. Sunk well below its high-water mark and boozy: discard and remake.</p><p>Balls: press a floured finger in gently. Springs back slowly and only halfway means ready. Springs back fast means wait. The dent stays means over-proofed: still usable if handled gently, or re-ball and give it 45 minutes.</p>` },
     { q:'Why does the plan change with the temperature?', a:`<p>Every wait is simulated in five-minute slices at the temperature the dough actually sees: your kitchen by day, the night temperature after 22:00, the fridge when it is inside, and the hourly forecast if you applied it. The dough ball also takes about an hour and a half to warm up or cool down, which is why it comes out of the fridge earlier than the proof alone would need.</p><p>Weak flour has a second clock: warm hours slowly break its gluten down. The plan keeps those hours under a comfort limit and uses the fridge, not the counter, to absorb spare time.</p>` },
@@ -1667,7 +1683,7 @@ const ENGINE = (() => {
   $('#chatInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#chatForm').requestSubmit(); } });
 
   /* ---------------- boot ---------------- */
-  applyAuto(); renderSteppers(); renderTemp(); tuneSummary(); compute(); loadWeather(); initCoach();
+  applyAuto(); renderSteppers(); renderTemp(); renderHyd(); tuneSummary(); compute(); loadWeather(); initCoach();
   const landing = () => { const h = location.hash.slice(1); if (h) return h; let seen = false; try { seen = !!localStorage.getItem(KEY); } catch (e) {} return seen && last?.ok ? 'schedule' : 'plan'; };
   showView(landing(), { hash: false });
   setInterval(refreshNow, 30000);

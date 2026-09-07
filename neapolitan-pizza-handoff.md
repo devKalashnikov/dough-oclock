@@ -98,20 +98,22 @@ Rest 20–30 minutes on the counter before mixing into the final dough.
 
 Water should be genuinely cold — fridge water, or tap water with ice cubes melted in and any remaining ice removed. In current Islamabad heat this matters more than ever: kneading generates friction heat, and warm dough overproofs fast.
 
-### Stand mixer method (step by step)
+### Stand mixer method (step by step) — revised 2026-09-07
 
-1. Combine both flours in the mixer bowl, stir by hand.
-2. Add all the poolish + **80% of the water** (300ml at 65%, 360ml at 70%).
-3. Dough hook. **Low speed (speed 1–2). Never go above speed 2** — higher speeds overheat the dough and tear gluten instead of building it.
-4. Mix low 3–4 min. It will look shaggy and rough. Normal.
-5. Add the 35g salt. Mix low 1 minute.
-6. With mixer running low, pour in the remaining water in a slow stream. 2 minutes.
-7. Knead on low **8–10 minutes**.
-8. Drizzle in the 4 tbsp olive oil with mixer running. Knead 3–4 minutes more.
-9. Check: dough should be clinging to the hook and partially pulling from the bowl sides. Tacky is correct. Gluey/puddle is not.
-10. Rest 30 minutes covered.
-11. Ball at 280g.
-12. Proof.
+Revised after a batch that stayed liquid and never gathered on the hook. Root causes: kneading on speed 1 (which only stirs on a home mixer) and too much water in the bowl from the start for weak maida. Research and sources: `research/mixing-and-kneading.md`.
+
+1. **Water first.** Half of the water into the bowl (190 ml at 65%). Dissolve the 35 g salt in the other half and keep it aside.
+2. Add all the poolish, then both flours on top.
+3. Dough hook. **Speed 1 for 2–3 min**, only until no dry flour is left: a rough, tight ball (about 45–50% hydration at this point), not a batter.
+4. **Rest 15–20 min covered.** Maida drinks slowly; this is where it catches up.
+5. **Speed 2 for 6–8 min** — speed 2 is the kneading speed on a KitchenAid-class mixer (its speed 1 already turns faster than a spiral mixer's second speed). Knead until the dough gathers on the hook and pulls clean from the bowl.
+6. **Second water (bassinage):** the salty half in 3–4 small additions on speed 2. Wait until each addition has vanished and the dough gathers on the hook again before the next. 8–10 min. Too fast and it turns to soup.
+7. Olive oil last, 2 min.
+8. Stop when the dough is smooth and satiny, even if it fails the windowpane: for an overnight or cold-fermented dough, fermentation finishes the gluten. Total under 40 min.
+9. Check: clinging to the hook, bowl clean, tacky not gluey. A hook spinning through sloppy dough that never gathers = too much water too early, or too little dough for the bowl (scrape down, hold water back, 5 more min).
+10. Rest 15–30 minutes covered, then ball at 280 g and proof.
+
+Still true: **never above speed 2** (gearbox limit, not a dough rule), and **never add flour** to fix stickiness.
 
 ### THE MOST IMPORTANT TROUBLESHOOTING RULE
 
@@ -123,6 +125,8 @@ More kneading tears the fragile gluten strands. Instead:
 - If still not there: rest 15–20 min, knead 5 min. Repeat 2–3 cycles.
 
 This is passive autolyse — the maida finishes absorbing water and gluten strands bond on their own. This works; it was used successfully multiple times.
+
+Dough temperature: the mixer adds roughly 12–17 °C over a full knead. In a 30 °C kitchen the water must be near 0 °C, and when the maths asks for less than that, replace 20% of the water with crushed ice (by weight) added with the first water. If the dough comes out above 27 °C, stop the mixer and finish with three sets of stretch-and-folds 15 minutes apart.
 
 **Never add more flour to fix stickiness.**
 

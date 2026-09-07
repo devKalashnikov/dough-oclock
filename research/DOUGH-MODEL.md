@@ -43,7 +43,7 @@ derived from that anchor with the temperature curves below. (`spec-flavor` §4.2
 never in the final dough at a 380–420 °C floor); atta = 20 % of total flour, all in the final dough; salt 3.5 %
 (3.0 % option) — salt also brakes the proteases; oil 3 %. Hydration 60–70 % offered, 65 % validated,
 warnings above 66 % and above 65 % in a ≥ 31 °C kitchen. Ball 280 g → stretch to 31 cm (0.37 g/cm²).
-Water temperature from the desired-dough-temperature rule with a 15 °C mixer friction factor
+Water temperature from the desired-dough-temperature rule with a 17 °C mixer friction factor (speed-2 knead of about 15 running minutes; King Arthur measured 12–13 °C for 7 min, PizzaBlab gives 8–16 °C for stand mixers)
 (King Arthur / PizzaBlab): DDT 23 °C for a room-proofed dough (25 °C below 20 °C rooms), 20 °C when the balls are
 going to the fridge, 26 °C for the emergency dough; ice and chilled-flour instructions appear when the formula
 demands water below 1 °C. (`hydration-and-oven.md`, `avpn-and-classic.md`)
@@ -108,4 +108,27 @@ the app says by how much to move the bake, or to proof in a warmer spot.
 2. Whether 3 g of yeast in a 30 °C poolish ripens fully in 16–24 h at your fridge temperature (watch its height at
    12, 18, 24 h).
 3. The 30 h cold cap for balls — pull one ball every 12 h from 12 to 48 h once, and compare.
-4. The mixer friction factor (15 °C assumed): measure the dough temperature after one knead and adjust.
+4. The mixer friction factor (17 °C assumed): measure the dough temperature after one knead and adjust.
+
+
+## Mixing method (revised 2026-09-07)
+
+A batch mixed "speed 1–2, poolish + 80 % of the water from the start" stayed liquid and never gathered on the
+hook. The method the app now teaches (sources in `mixing-and-kneading.md`):
+
+* **Speed 2 is the kneading speed on a home planetary mixer; speed 1 only stirs.** KitchenAid caps dough at speed 2
+  for the gearbox, and a KitchenAid's speed 1 already exceeds a spiral mixer's second speed. Every "high speed in
+  the middle" method (Vito, Lehmann's planetary advice, the WPC Hobart recipe) is a spiral or commercial mixer;
+  on a KitchenAid the equivalent is speed 2 for 6–10 min. Low speed only needs 17–25 min to reach smooth (Lehmann).
+* **Weak flour needs a stiff first mix.** Start with the poolish + half the final water (≈ 45–50 % total hydration),
+  speed 1 for 2–3 min to a rough ball, rest 15–20 min, then speed 2 until it clings to the hook. Only then the
+  second water (bassinage) in 3–4 small additions, each absorbed before the next (Wordloaf, PizzaBlab, The Fresh
+  Loaf "weak and moist flours need about 40–50 % hydration in the first step"). Adding all the water early dilutes
+  the gluten strands so they never link and the hook spins in vain — exactly the failure observed.
+* **Salt** dissolved in the held-back water and added with the second water: delayed enough to let the first gluten
+  form (the validated practice), dissolved so it distributes (PizzaBlab). Oil after all the water is absorbed.
+* **Stop at smooth and satiny.** For overnight/cold-fermented dough a full windowpane is unnecessary and intensive
+  mixing is harmful; fermentation finishes the gluten (PizzaBlab, Lehmann "about 50 % of full development").
+* **Friction factor 17 °C** and the mix step is 36 min in the timeline. Ice: when the water temperature comes out
+  below 0 °C, 20 % of the water goes in as crushed ice with the first water and the flour/bowl are chilled; if the
+  dough still finishes above 27 °C, finish with stretch-and-folds rather than more mixer time.
